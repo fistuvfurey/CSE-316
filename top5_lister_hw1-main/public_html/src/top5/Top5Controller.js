@@ -87,6 +87,7 @@ export default class Top5Controller {
             textInput.onkeydown = (event) => {
                 if (event.key === 'Enter') { 
                     this.model.addChangeListNameTransaction(id, event.target.value);
+                    this.model.sortLists();
                 }
             }
 
