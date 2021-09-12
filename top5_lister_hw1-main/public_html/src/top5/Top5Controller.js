@@ -92,8 +92,8 @@ export default class Top5Controller {
             }
 
             textInput.onblur = (event) => {
-                this.model.restoreList();
-                console.log("onblur");
+                this.model.addChangeListNameTransaction(id, event.target.value);
+                this.model.sortLists();
             }
         }
 
