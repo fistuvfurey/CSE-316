@@ -4,7 +4,7 @@
  * This file provides responses for all user interface interactions.
  * 
  * @author McKilla Gorilla
- * @author ?
+ * @author Aidan Furey
  */
 export default class Top5Controller {
     constructor() {
@@ -69,6 +69,33 @@ export default class Top5Controller {
             // GET THE SELECTED LIST
             this.model.loadList(id);
         }
+
+        // FOR EDITING THE LIST NAME
+        let top5ListElement = document.getElementById("top5-list-" + id);
+        top5ListElement.ondblclick = (event) => {
+            // CLEAR THE TEXT
+            top5ListElement.innerHTML = "";
+
+            // ADD A TEXT FIELD
+            let textInput = document.createElement("input");
+            textInput.setAttribute("type", "text");
+            textInput.setAttribute("id", "list-name-text-input-" + id);
+            textInput.setAttribute("value", this.model.currentList.getName());
+
+            top5ListElement.appendChild(textInput);
+
+            textInput.onkeydown = (event) => {
+                if (event.key === 'Enter') { 
+                    this.model.addChangeListNameTransaction(id, event.target.value);
+                }
+            }
+
+            textInput.onblur = (event) => {
+                this.model.restoreList();
+                console.log("onblur");
+            }
+        }
+
         // FOR DELETING THE LIST
         document.getElementById("delete-list-" + id).onmousedown = (event) => {
             this.ignoreParentClick(event);

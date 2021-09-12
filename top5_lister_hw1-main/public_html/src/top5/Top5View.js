@@ -5,7 +5,7 @@
  * for loading data into our controls and building other UI controls.
  * 
  * @author McKilla Gorilla
- * @author ?
+ * @author Aidan Furey
  */
 export default class Top5View {
     // REFRESHES ALL THE LISTS IN THE LEFT SIDEBAR
@@ -66,6 +66,12 @@ export default class Top5View {
             item.innerHTML = "";
             item.appendChild(document.createTextNode(list.getItemAt(i)));
         }
+    }
+
+    updateListName(list) {
+        let listItem = document.getElementById("top5-list-" + list.id);
+        listItem.innerHTML = "";
+        listItem.appendChild(document.createTextNode(list.getName()));
     }
 
     clearWorkspace() {
