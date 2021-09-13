@@ -157,6 +157,7 @@ export default class Top5Model {
         let oldText = this.currentList.items[id];
         let transaction = new ChangeItem_Transaction(this, id, oldText, newText);
         this.tps.addTransaction(transaction);
+        this.view.updateToolbarButtons(this);
     }
 
     addChangeListNameTransaction = (id, newText) => {
@@ -169,6 +170,7 @@ export default class Top5Model {
     addMoveItemTransaction = (oldIndex, newIndex) => {
         let transaction = new MoveItem_Transaction(this, oldIndex, newIndex);
         this.tps.addTransaction(transaction);
+        this.view.updateToolbarButtons(this);
     }
 
     changeItem(id, text) {
@@ -197,6 +199,13 @@ export default class Top5Model {
     undo() {
         if (this.tps.hasTransactionToUndo()) {
             this.tps.undoTransaction();
+            this.view.updateToolbarButtons(this);
+        }
+    }
+
+    redo() {
+        if (this.tps.hasTransactionToRedo()) {
+            this.tps.doTransaction();
             this.view.updateToolbarButtons(this);
         }
     }
