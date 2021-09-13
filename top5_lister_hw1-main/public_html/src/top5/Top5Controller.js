@@ -109,6 +109,16 @@ export default class Top5Controller {
             deleteSpan.appendChild(document.createTextNode(listName));
             modal.classList.add("is-visible");
         }
+
+        // FOR MOUSEOVER HIGHLIGHTING THE LIST
+        top5ListElement.onmouseover = (event) => {
+            top5ListElement.classList.add("highlighted-list-card");
+        }
+
+        // FOR MOUSEOUT UNHIGHLIGHTING THE LIST
+        top5ListElement.onmouseout = (event) => {
+            top5ListElement.classList.remove("highlighted-list-card");
+        }
     }
 
     ignoreParentClick(event) {

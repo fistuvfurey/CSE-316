@@ -116,6 +116,11 @@ body {
   background-color: var(--swatch-complement);
 }
 
+.highlighted-list-card {
+  background-color: var(--swatch-contrast);
+  color: white;
+}
+
 .list-card-button {
   float:right;
   font-size:18pt;
