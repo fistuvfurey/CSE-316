@@ -31,6 +31,26 @@ export default class Top5Controller {
         for (let i = 1; i <= 5; i++) {
             let item = document.getElementById("item-" + i);
 
+            // FOR DRAG AND DROP
+            item.ondragstart = (ev) => {
+                ev.dataTransfer.setData("text/html", ev.target.id);
+            }
+
+            item.ondragover = (ev) => {
+                ev.preventDefault();
+            }
+
+            item.ondrop = (ev) => {
+                ev.preventDefault();
+                let item1Id = ev.dataTransfer.getData("text/html");
+                let item2Id = ev.target.id;
+                let oldIndex = item1Id.charAt(item1Id.length - 1);
+                let newIndex = item2Id.charAt(item2Id.length - 1);
+                oldIndex--;
+                newIndex--;
+                this.model.addMoveItemTransaction(oldIndex, newIndex);
+            }
+
             // AND FOR TEXT EDITING
             item.ondblclick = (ev) => {
                 if (this.model.hasCurrentList()) {

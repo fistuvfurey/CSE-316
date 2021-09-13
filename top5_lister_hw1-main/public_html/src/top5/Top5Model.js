@@ -2,6 +2,7 @@ import jsTPS from "../common/jsTPS.js"
 import Top5List from "./Top5List.js";
 import ChangeItem_Transaction from "./transactions/ChangeItem_Transaction.js"
 import ChangeListName_Transaction from "./transactions/ChangeListName_Transaction.js"
+import MoveItem_Transaction from "./transactions/MoveItem_Transaction.js";
 
 /**
  * Top5Model.js
@@ -165,6 +166,11 @@ export default class Top5Model {
         this.tps.addTransaction(transaction);
     }
 
+    addMoveItemTransaction = (oldIndex, newIndex) => {
+        let transaction = new MoveItem_Transaction(this, oldIndex, newIndex);
+        this.tps.addTransaction(transaction);
+    }
+
     changeItem(id, text) {
         this.currentList.items[id] = text;
         this.view.update(this.currentList);
@@ -174,6 +180,16 @@ export default class Top5Model {
     changeListName(text) {
         this.currentList.setName(text);
         this.view.updateListName(this.currentList);
+        this.saveLists();
+    }
+
+    moveItem(oldIndex, newIndex) {
+        // Swap the items
+        let item1 = this.currentList.getItemAt(oldIndex);
+        let item2 = this.currentList.getItemAt(newIndex);
+        this.currentList.setItemAt(newIndex, item1);
+        this.currentList.setItemAt(oldIndex, item2);
+        this.view.update(this.currentList);
         this.saveLists();
     }
 
