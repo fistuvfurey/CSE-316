@@ -63,6 +63,17 @@ export default class Top5Model {
         return newList;
     }
 
+    deleteList(id) {
+        let index = this.getListIndex(id);
+        let listToDelete = this.getList(index);
+        if (listToDelete === this.currentList) {
+            this.currentList = null;
+        }
+        this.top5Lists.splice(index, 1);
+        this.view.refreshLists(this.top5Lists);
+        this.saveLists();
+    }
+
     sortLists() {
         this.top5Lists.sort((listA, listB) => {
             if (listA.getName() < listB.getName()) {

@@ -108,6 +108,17 @@ export default class Top5Controller {
             deleteSpan.innerHTML = "";
             deleteSpan.appendChild(document.createTextNode(listName));
             modal.classList.add("is-visible");
+            
+            // IF USER CLICKS CANCEL
+            document.getElementById("dialog-cancel-button").onmousedown = (event) => {
+                modal.classList.remove("is-visible");
+            }
+
+            // IF USER CLICKS CONFIRM
+            document.getElementById("dialog-confirm-button").onmousedown = (event) => {
+                this.model.deleteList(id);
+                modal.classList.remove("is-visible");
+            }
         }
 
         // FOR MOUSEOVER HIGHLIGHTING THE LIST
