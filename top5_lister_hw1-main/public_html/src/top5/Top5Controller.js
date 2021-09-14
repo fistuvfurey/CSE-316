@@ -103,6 +103,7 @@ export default class Top5Controller {
         // FOR EDITING THE LIST NAME
         let top5ListElement = document.getElementById("top5-list-" + id);
         top5ListElement.ondblclick = (event) => {
+            this.ignoreParentClick(event);
             // CLEAR THE TEXT
             top5ListElement.innerHTML = "";
 
@@ -132,8 +133,8 @@ export default class Top5Controller {
             this.ignoreParentClick(event);
             // VERIFY THAT THE USER REALLY WANTS TO DELETE THE LIST
             let modal = document.getElementById("delete-modal");
-            this.listToDeleteIndex = id;
-            let listName = this.model.getList(id).getName();
+            let listToDeleteIndex = this.model.getListIndex(id);
+            let listName = this.model.getList(listToDeleteIndex).getName();
             let deleteSpan = document.getElementById("delete-list-span");
             deleteSpan.innerHTML = "";
             deleteSpan.appendChild(document.createTextNode(listName));
