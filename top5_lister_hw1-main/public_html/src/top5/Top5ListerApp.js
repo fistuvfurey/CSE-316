@@ -9,7 +9,7 @@ import Top5Controller from './Top5Controller.js';
  * app with all needed initialization.
  * 
  * @author McKilla Gorilla
- * @author ?
+ * @author Aidan Furey
  */
 
 export class Top5ListerApp {
@@ -40,6 +40,7 @@ export class Top5ListerApp {
         if (!success) {
             this.loadListsFromJSON("./data/default_lists.json");
         }
+        this.view.updateToolbarButtons(this.model);
     }
 
     loadListsFromJSON(jsonFilePath) {

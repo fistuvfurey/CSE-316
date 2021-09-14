@@ -22,6 +22,7 @@ export default class Top5View {
 
     setController(initController) {
         this.controller = initController;
+        this.updateToolbarButtons
     }
 
     // ADDS A LIST TO SELECT FROM IN THE LEFT SIDEBAR
@@ -65,13 +66,6 @@ export default class Top5View {
             let item = document.getElementById("item-" + (i+1));
             item.innerHTML = "";
             item.appendChild(document.createTextNode(list.getItemAt(i)));
-        }
-    }
-
-    clearItems() {
-        for (let i = 0; i < 5; i++) {
-            let item = document.getElementById("item-" + (i+1));
-            item.innerHTML = "";
         }
     }
 

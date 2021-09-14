@@ -103,7 +103,7 @@ export default class Top5Model {
 
     closeCurrentList() {
         this.currentList = null;
-        this.view.clearItems();
+        this.view.clearWorkspace();
         this.view.updateToolbarButtons(this);
     }
 
