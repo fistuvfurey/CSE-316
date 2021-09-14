@@ -101,6 +101,12 @@ export default class Top5Model {
         }
     }
 
+    closeCurrentList() {
+        this.currentList = null;
+        this.view.clearItems();
+        this.view.updateToolbarButtons(this);
+    }
+
     loadList(id) {
         let list = null;
         let found = false;

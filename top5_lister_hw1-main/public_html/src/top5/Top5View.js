@@ -68,6 +68,13 @@ export default class Top5View {
         }
     }
 
+    clearItems() {
+        for (let i = 0; i < 5; i++) {
+            let item = document.getElementById("item-" + (i+1));
+            item.innerHTML = "";
+        }
+    }
+
     updateListName(list) {
         let listItem = document.getElementById("top5-list-" + list.id);
         listItem.innerHTML = "";
@@ -108,17 +115,26 @@ export default class Top5View {
 
     updateToolbarButtons(model) {
         let tps = model.tps;
+        // UPDATE UNDO BUTTON
         if (!tps.hasTransactionToUndo()) {
             this.disableButton("undo-button");
         }
         else {
             this.enableButton("undo-button");
         }
+        // UPDATE REDO BUTTON
         if (!tps.hasTransactionToRedo()) {
             this.disableButton("redo-button");
         }
         else {
             this.enableButton("redo-button");
+        }
+        // UPDATE CLOSE BUTTON
+        if (model.currentList === null) {
+            this.disableButton("close-button");
+        }
+        else {
+            this.enableButton("close-button");
         }
     }
 }
