@@ -35,6 +35,8 @@ export default class Top5Controller {
         document.getElementById("close-button").onmousedown = (event) => {
             this.model.unselectAll();
             this.model.closeCurrentList();
+            let statusbar = document.getElementById("top5-statusbar");
+            statusbar.textContent = "";
         }
 
         // SETUP THE ITEM HANDLERS
@@ -98,6 +100,12 @@ export default class Top5Controller {
 
             // GET THE SELECTED LIST
             this.model.loadList(id);
+
+            // UPDATE THE STATUS BAR WITH LIST NAME
+            let statusbar = document.getElementById("top5-statusbar");
+            let list = this.model.getList(this.model.getListIndex(id));
+            let listName = list.getName();
+            statusbar.textContent = listName;
         }
 
         // FOR EDITING THE LIST NAME
