@@ -96,6 +96,7 @@ export default class Top5Controller {
     registerListSelectHandlers(id) {
         // FOR SELECTING THE LIST
         document.getElementById("top5-list-" + id).onmousedown = (event) => {
+            this.ignoreParentClick(event);
             this.model.unselectAll();
 
             // GET THE SELECTED LIST
@@ -150,11 +151,13 @@ export default class Top5Controller {
             
             // IF USER CLICKS CANCEL
             document.getElementById("dialog-cancel-button").onmousedown = (event) => {
+                this.ignoreParentClick(event);
                 modal.classList.remove("is-visible");
             }
 
             // IF USER CLICKS CONFIRM
             document.getElementById("dialog-confirm-button").onmousedown = (event) => {
+                this.ignoreParentClick(event);
                 this.model.deleteList(id);
                 modal.classList.remove("is-visible");
             }

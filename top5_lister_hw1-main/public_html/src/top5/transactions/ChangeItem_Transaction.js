@@ -7,7 +7,7 @@ import jsTPS_Transaction from "../../common/jsTPS.js"
  * for a given item. It will be managed by the transaction stack.
  * 
  * @author McKilla Gorilla
- * @author ?
+ * @author Aidan Furey
  */
 export default class ChangeItem_Transaction extends jsTPS_Transaction {
     constructor(initModel, initId, initOldText, initNewText) {
