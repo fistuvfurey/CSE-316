@@ -106,7 +106,7 @@ export default class Top5Controller {
             let statusbar = document.getElementById("top5-statusbar");
             let list = this.model.getList(this.model.getListIndex(id));
             let listName = list.getName();
-            statusbar.textContent = listName;
+            statusbar.textContent = "Top 5 " + listName;
         }
 
         // FOR EDITING THE LIST NAME
