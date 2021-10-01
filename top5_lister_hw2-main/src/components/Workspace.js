@@ -1,4 +1,5 @@
 import React from "react";
+import ItemCard from "./ItemCard";
 
 export default class Workspace extends React.Component {
     render() {
@@ -13,7 +14,18 @@ export default class Workspace extends React.Component {
                         <div className="item-number">4.</div>
                         <div className="item-number">5.</div>
                     </div>
-                    {currentList && currentList.items.map((item, index) => <div className="top5-item">{item}</div>)}
+                    {
+                        currentList && currentList.items.map((item, index) => 
+                            { return(
+                                <ItemCard
+                                    id={index}
+                                    key={index}
+                                    name={item}
+                                />
+                            )
+                            }
+                        )
+                    }
                 </div>
             </div>
         )
