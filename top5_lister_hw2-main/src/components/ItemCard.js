@@ -5,6 +5,7 @@ export default class ItemCard extends React.Component {
         super(props);
 
         this.state = {
+            text: this.props.name,
             editActive: false,
         }
     }
@@ -19,16 +20,47 @@ export default class ItemCard extends React.Component {
         });
     }
 
+    handleKeyPress = (event) => {
+        if (event.code === "Enter") {
+            this.handleBlur();
+        }
+    }
+
+    handleUpdate = (event) => {
+        this.setState({ text: event.target.value})
+    }
+
+    handleBlur = (event) => {
+        let textValue = this.state.text;
+        console.log("ItemCard handleBlur: " + textValue);
+        this.props.renameItemCallback(this.props.id, textValue)
+        this.handleToggleEdit();
+    }
+
     render() {
-        console.log(this.props.name)
-        return (
-            <div
-                id={"item-" + this.props.index}
-                key={"item-" + this.props.index}
-                onDoubleClick={this.onDoubleClick}
-                className="top5-item">
-                    {this.props.name}
-            </div>
-        );
+        if (this.state.editActive) {
+            return (
+                <input
+                    id={"item-" + this.props.index}
+                    className="top5-item"
+                    type="text"
+                    onKeyPress={this.handleKeyPress}
+                    onBlur={this.handleBlur}
+                    onChange={this.handleUpdate}
+                    defaultValue={this.props.item}
+                />
+            )
+        }
+        else {
+            return (
+                <div
+                    id={"item-" + this.props.index}
+                    key={"item-" + this.props.index}
+                    onDoubleClick={this.onDoubleClick}
+                    className="top5-item">
+                        {this.props.name}
+                </div>
+            );
+        }
     }
 }
