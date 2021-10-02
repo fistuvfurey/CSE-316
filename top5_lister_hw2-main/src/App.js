@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import jsTPS from "./common/jsTPS.js"
 
 // IMPORT DATA MANAGEMENT AND TRANSACTION STUFF
 import DBManager from './db/DBManager';
@@ -10,6 +11,7 @@ import Banner from './components/Banner.js'
 import Sidebar from './components/Sidebar.js'
 import Workspace from './components/Workspace.js';
 import Statusbar from './components/Statusbar.js'
+import ChangeItem_Transaction from './transactions/ChangeItem_Transaction';
 
 class App extends React.Component {
     constructor(props) {
@@ -17,6 +19,8 @@ class App extends React.Component {
 
         // THIS WILL TALK TO LOCAL STORAGE
         this.db = new DBManager();
+
+        this.tps = new jsTPS();
 
         // GET THE SESSION DATA FROM OUR DATA MANAGER
         let loadedSessionData = this.db.queryGetSessionData();
@@ -105,13 +109,24 @@ class App extends React.Component {
         });
     }
 
-    renameItem = (index, newName) => {
+    changeItem = (index, newItem) => {
         let newCurrentList = this.state.currentList;
-        newCurrentList.items[index] = newName;
+        newCurrentList.items[index] = newItem;
+
         this.setState(prevState => ({
-            currentList: newCurrentList
-        }))
+            currentList: prevState.currentList
+        }), () => {
+            this.db.mutationUpdateList(this.state.currentList);
+            this.db.mutationUpdateSessionData(this.state.sessionData);
+        });
     }
+
+    addChangeItemTransaction = (index, newItem) => {
+        let oldItem = this.state.currentList[index];
+        let transaction = new ChangeItem_Transaction(this.changeItem, index, oldItem, newItem);
+        this.tps.addTransaction(transaction);
+    }
+
     // THIS FUNCTION BEGINS THE PROCESS OF LOADING A LIST FOR EDITING
     loadList = (key) => {
         let newCurrentList = this.db.queryGetList(key);
@@ -167,7 +182,7 @@ class App extends React.Component {
                 />
                 <Workspace
                     currentList={this.state.currentList}
-                    renameItemCallback={this.renameItem}
+                    renameItemCallback={this.addChangeItemTransaction}
                 />
                 <Statusbar 
                     currentList={this.state.currentList} />
