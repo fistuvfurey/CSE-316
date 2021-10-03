@@ -6,6 +6,7 @@ export default class ItemCard extends React.Component {
 
         this.state = {
             text: this.props.name,
+            isDraggedOver: false,
             editActive: false,
         }
     }
@@ -17,6 +18,12 @@ export default class ItemCard extends React.Component {
     handleToggleEdit = (event) => {
         this.setState({
             editActive: !this.state.editActive
+        });
+    }
+
+    handleToggleDraggedTo = (event) => {
+        this.setState({
+            isDraggedOver: !this.state.isDraggedOver
         });
     }
 
@@ -41,6 +48,14 @@ export default class ItemCard extends React.Component {
         event.preventDefault();
     }
 
+    onDragEnter = (event) => {
+        this.handleToggleDraggedTo();
+    }
+
+    onDragLeave = (event) => {
+        this.handleToggleDraggedTo();
+    }
+
     onDragStart = (event, id) => {
         console.log("dragstart: ", id);
         event.dataTransfer.setData("text/html", id);
@@ -50,10 +65,12 @@ export default class ItemCard extends React.Component {
         let oldIndex = event.dataTransfer.getData("text/html");
         console.log("onDrop: ", id);
         this.props.moveItemCallback(oldIndex, id);
+        this.handleToggleDraggedTo();
     }
 
-
     render() {
+        const { isDraggedOver } = this.state;
+
         if (this.state.editActive) {
             return (
                 <input
@@ -76,9 +93,11 @@ export default class ItemCard extends React.Component {
                     className="droppable"
                     onDragOver={(e)=>this.onDragOver(e)}
                     onDragStart={(e) => this.onDragStart(e, this.props.id)}
+                    onDragEnter={(e) => this.onDragEnter(e)}
+                    onDragLeave={(e) => this.onDragLeave(e)}
                     onDrop={(e)=>this.onDrop(e, this.props.id)}
                     onDoubleClick={this.onDoubleClick}
-                    className="top5-item">
+                    className={isDraggedOver ? "top5-item-dragged-to" : "top5-item"}>
                         {this.props.name}
                 </div>
             );

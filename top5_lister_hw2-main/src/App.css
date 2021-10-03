@@ -193,11 +193,19 @@ body {
   background-color: var(--swatch-primary);
 }
 
-.item-number, .top5-item-dragged-to { 
-  display:flex;
+.item-number { 
+  display: flex;
   align-items: center;
   font-size: 24pt;
-  height:20%;
+  height: 20%;
+}
+
+.top5-item-dragged-to {
+  display: flex;
+  align-items: center;
+  font-size: 24pt;
+  height: 20%;
+  margin-left: 20%;
 }
 
 .top5-item {
