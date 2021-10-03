@@ -37,6 +37,22 @@ export default class ItemCard extends React.Component {
         this.handleToggleEdit();
     }
 
+    onDragOver = (event) => {
+        event.preventDefault();
+    }
+
+    onDragStart = (event, id) => {
+        console.log("dragstart: ", id);
+        event.dataTransfer.setData("text/html", id);
+    }
+
+    onDrop = (event, id) => {
+        let oldIndex = event.dataTransfer.getData("text/html");
+        console.log("onDrop: ", id);
+        this.props.moveItemCallback(oldIndex, id);
+    }
+
+
     render() {
         if (this.state.editActive) {
             return (
@@ -54,8 +70,13 @@ export default class ItemCard extends React.Component {
         else {
             return (
                 <div
-                    id={"item-" + this.props.index}
-                    key={"item-" + this.props.index}
+                    id={"item-" + this.props.id}
+                    draggable
+                    className="draggable"
+                    className="droppable"
+                    onDragOver={(e)=>this.onDragOver(e)}
+                    onDragStart={(e) => this.onDragStart(e, this.props.id)}
+                    onDrop={(e)=>this.onDrop(e, this.props.id)}
                     onDoubleClick={this.onDoubleClick}
                     className="top5-item">
                         {this.props.name}

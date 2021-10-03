@@ -2,6 +2,10 @@ import React from 'react';
 import './App.css';
 import jsTPS from "./common/jsTPS.js"
 
+// Import transactions
+import ChangeItem_Transaction from './transactions/ChangeItem_Transaction';
+import MoveItem_Transaction from './transactions/MoveItem_Transaction';
+
 // IMPORT DATA MANAGEMENT AND TRANSACTION STUFF
 import DBManager from './db/DBManager';
 
@@ -11,7 +15,6 @@ import Banner from './components/Banner.js'
 import Sidebar from './components/Sidebar.js'
 import Workspace from './components/Workspace.js';
 import Statusbar from './components/Statusbar.js'
-import ChangeItem_Transaction from './transactions/ChangeItem_Transaction';
 
 class App extends React.Component {
     constructor(props) {
@@ -127,6 +130,21 @@ class App extends React.Component {
         this.tps.addTransaction(transaction);
     }
 
+    moveItem = (oldItemIndex, newItemIndex) => {
+        this.state.currentList.items.splice(newItemIndex, 0, this.state.currentList.items.splice(oldItemIndex, 1)[0]);
+        this.setState(prevState => ({
+            currentList: prevState.currentList
+        }), () => {
+            this.db.mutationUpdateList(this.state.currentList);
+            this.db.mutationUpdateSessionData(this.state.sessionData);
+        })
+    }
+
+    addMoveItemTransaction = (oldItemIndex, newItemIndex) => {
+        let transaction = new MoveItem_Transaction(this.moveItem, oldItemIndex, newItemIndex);
+        this.tps.addTransaction(transaction);
+    }
+
     // THIS FUNCTION BEGINS THE PROCESS OF LOADING A LIST FOR EDITING
     loadList = (key) => {
         let newCurrentList = this.db.queryGetList(key);
@@ -183,6 +201,7 @@ class App extends React.Component {
                 <Workspace
                     currentList={this.state.currentList}
                     renameItemCallback={this.addChangeItemTransaction}
+                    moveItemCallback={this.addMoveItemTransaction}
                 />
                 <Statusbar 
                     currentList={this.state.currentList} />

@@ -193,10 +193,7 @@ export default class Top5Model {
 
     moveItem(oldIndex, newIndex) {
         // Swap the items
-        let item1 = this.currentList.getItemAt(oldIndex);
-        let item2 = this.currentList.getItemAt(newIndex);
-        this.currentList.setItemAt(newIndex, item1);
-        this.currentList.setItemAt(oldIndex, item2);
+        this.currentList.moveItem(oldIndex, newIndex);
         this.view.update(this.currentList);
         this.saveLists();
     }

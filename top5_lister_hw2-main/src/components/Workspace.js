@@ -4,7 +4,8 @@ import ItemCard from "./ItemCard";
 export default class Workspace extends React.Component {
     render() {
         const { currentList,
-                renameItemCallback} = this.props;
+                renameItemCallback,
+            moveItemCallback } = this.props;
         return (
             <div id="top5-workspace">
                 <div id="workspace-edit">
@@ -23,6 +24,7 @@ export default class Workspace extends React.Component {
                                     key={index}
                                     name={item}
                                     renameItemCallback={renameItemCallback}
+                                    moveItemCallback={moveItemCallback}
                                 />
                             )
                             }
