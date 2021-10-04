@@ -30,7 +30,9 @@ class App extends React.Component {
         // SETUP THE INITIAL STATE
         this.state = {
             currentList : null,
-            sessionData : loadedSessionData
+            sessionData : loadedSessionData,
+            hasTransactionToRedo: this.tps.hasTransactionToRedo,
+            hasTransactionToUndo: this.tps.hasTransactionToUndo
         }
 
         window.addEventListener("keydown", this.handleKeyDown);
@@ -231,15 +233,23 @@ class App extends React.Component {
     }
 
     undo = () => {
-        if (this.tps.hasTransactionToUndo()) {
+        if (this.state.hasTransactionToUndo) {
             this.tps.undoTransaction();
         }
+        this.setState({
+            hasTransactionToUndo: this.tps.hasTransactionToUndo,
+            hasTransactionToRedo: this.tps.hasTransactionToRedo
+        });
     }
 
     redo = () => {
-        if (this.tps.hasTransactionToRedo()) {
+        if (this.state.hasTransactionToRedo) {
             this.tps.doTransaction();
         }
+        this.setState({
+            hasTransactionToUndo: this.tps.hasTransactionToUndo,
+            hasTransactionToRedo: this.tps.hasTransactionToRedo
+        });
     }
 
     render() {
@@ -249,7 +259,9 @@ class App extends React.Component {
                     title='Top 5 Lister'
                     closeCallback={this.closeCurrentList}
                     undoCallback={this.undo}
-                    redoCallback={this.redo} />
+                    redoCallback={this.redo} 
+                    currentList={this.state.currentList}
+                    tps={this.tps} />
                 <Sidebar
                     heading='Your Lists'
                     currentList={this.state.currentList}
