@@ -22,7 +22,6 @@ class App extends React.Component {
 
         // THIS WILL TALK TO LOCAL STORAGE
         this.db = new DBManager();
-
         this.tps = new jsTPS();
 
         // GET THE SESSION DATA FROM OUR DATA MANAGER
@@ -33,6 +32,13 @@ class App extends React.Component {
             currentList : null,
             sessionData : loadedSessionData
         }
+
+        // document.addEventListener('keydown', function(event) {
+        //     if (event.ctrlKey && event.key === 'z') {
+        //         App.undo();
+        //     }
+        // })
+
     }
     sortKeyNamePairsByName = (keyNamePairs) => {
         keyNamePairs.sort((keyPair1, keyPair2) => {
@@ -164,6 +170,8 @@ class App extends React.Component {
             sessionData: this.state.sessionData
         }), () => {
             // ANY AFTER EFFECTS?
+            // Clear the transaction stack
+            this.tps.clearAllTransactions();
         });
     }
 
