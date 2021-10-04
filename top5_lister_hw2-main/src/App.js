@@ -46,6 +46,7 @@ class App extends React.Component {
             this.redo();
         }
     }
+
     sortKeyNamePairsByName = (keyNamePairs) => {
         keyNamePairs.sort((keyPair1, keyPair2) => {
             // GET THE LISTS
@@ -176,7 +177,7 @@ class App extends React.Component {
             sessionData: this.state.sessionData
         }), () => {
             // ANY AFTER EFFECTS?
-            // Clear the transaction stack
+            // Yes, clear the transaction stack.
             this.tps.clearAllTransactions();
         });
     }
