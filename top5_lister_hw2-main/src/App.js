@@ -242,6 +242,7 @@ class App extends React.Component {
                 <DeleteModal
                     hideDeleteListModalCallback={this.hideDeleteListModal}
                     removeListCallback={this.removeList}
+                    listKeyPair={this.state.listKeyPairMarkedForDeletion}
                 />
             </div>
         );
