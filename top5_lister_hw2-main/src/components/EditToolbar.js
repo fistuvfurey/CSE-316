@@ -1,6 +1,16 @@
 import React from "react";
 
 export default class EditToolbar extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            hasUndo: false,
+            hasRedo: false,
+            isListOpen: false
+        }
+    }
+
     render() {
         return (
             <div id="edit-toolbar">
