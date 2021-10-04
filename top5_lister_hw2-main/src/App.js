@@ -202,6 +202,9 @@ class App extends React.Component {
                 break;
             }
         }
+        let listToDelete = this.db.queryGetList(listKeyPairToDelete.key);
+        let prevCurrentList = this.state.currentList;
+        
         newKeyNamePairs.splice(listToDeleteIndex, 1);
 
         this.setState(prevState => ({
@@ -213,11 +216,15 @@ class App extends React.Component {
                 keyNamePairs: newKeyNamePairs
             }
         }), () => {
+            // Update db
             let sessionData = this.db.queryGetSessionData();
             sessionData.keyNamePairs.splice(listToDeleteIndex, 1)
             this.db.mutationUpdateSessionData(this.state.sessionData);
+            // Update UI
             this.hideDeleteListModal();
-            this.closeCurrentList();
+            if (prevCurrentList && (listToDelete.key === prevCurrentList.key)) {
+                this.closeCurrentList();
+            }
         });
     }
 
