@@ -205,11 +205,11 @@ class App extends React.Component {
         newKeyNamePairs.splice(listToDeleteIndex, 1);
 
         this.setState(prevState => ({
-            currentList: this.state.currentList === prevState.listKeyPairMarkedForDeletion ? null : prevState.currentList,
+            currentList: prevState.currentList,
             listKeyPairMarkedForDeletion: null, 
             sessionData: {
-                nextKey: prevState.sessionData.nextKey + 1,
-                counter: prevState.sessionData.counter + 1,  
+                nextKey: prevState.sessionData.nextKey,
+                counter: prevState.sessionData.counter - 1,  
                 keyNamePairs: newKeyNamePairs
             }
         }), () => {
@@ -217,6 +217,7 @@ class App extends React.Component {
             sessionData.keyNamePairs.splice(listToDeleteIndex, 1)
             this.db.mutationUpdateSessionData(this.state.sessionData);
             this.hideDeleteListModal();
+            this.closeCurrentList();
         });
     }
 
