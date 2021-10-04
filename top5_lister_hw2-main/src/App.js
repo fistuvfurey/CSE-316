@@ -224,13 +224,20 @@ class App extends React.Component {
         }
     }
 
+    redo = () => {
+        if (this.tps.hasTransactionToRedo()) {
+            this.tps.doTransaction();
+        }
+    }
+
     render() {
         return (
             <div id="app-root">
                 <Banner 
                     title='Top 5 Lister'
                     closeCallback={this.closeCurrentList}
-                    undoCallback={this.undo} />
+                    undoCallback={this.undo}
+                    redoCallback={this.redo} />
                 <Sidebar
                     heading='Your Lists'
                     currentList={this.state.currentList}

@@ -12,6 +12,7 @@ export default class EditToolbar extends React.Component {
                 </div>
                 <div
                     id='redo-button'
+                    onClick={this.props.redoCallback}
                     className="top5-button">
                         &#x21B7;
                 </div>

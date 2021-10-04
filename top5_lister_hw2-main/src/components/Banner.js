@@ -8,7 +8,8 @@ export default class Banner extends React.Component {
             <div id="top5-banner">
                 {title}
                 <EditToolbar 
-                undoCallback={this.props.undoCallback} />
+                undoCallback={this.props.undoCallback}
+                redoCallback={this.props.redoCallback} />
             </div>
         );
     }
