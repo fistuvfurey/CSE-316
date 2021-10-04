@@ -126,7 +126,7 @@ class App extends React.Component {
     }
 
     addChangeItemTransaction = (index, newItem) => {
-        let oldItem = this.state.currentList[index];
+        let oldItem = this.state.currentList.items[index];
         let transaction = new ChangeItem_Transaction(this.changeItem, index, oldItem, newItem);
         this.tps.addTransaction(transaction);
     }
@@ -201,7 +201,6 @@ class App extends React.Component {
         }), () => {
             let sessionData = this.db.queryGetSessionData();
             sessionData.keyNamePairs.splice(listToDeleteIndex, 1)
-            localStorage.removeItem(listKeyPairToDelete.key);
             this.db.mutationUpdateSessionData(this.state.sessionData);
             this.hideDeleteListModal();
         });
@@ -218,12 +217,20 @@ class App extends React.Component {
         let modal = document.getElementById("delete-modal");
         modal.classList.remove("is-visible");
     }
+
+    undo = () => {
+        if (this.tps.hasTransactionToUndo()) {
+            this.tps.undoTransaction();
+        }
+    }
+
     render() {
         return (
             <div id="app-root">
                 <Banner 
                     title='Top 5 Lister'
-                    closeCallback={this.closeCurrentList} />
+                    closeCallback={this.closeCurrentList}
+                    undoCallback={this.undo} />
                 <Sidebar
                     heading='Your Lists'
                     currentList={this.state.currentList}
