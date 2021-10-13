@@ -103,8 +103,8 @@ export const useGlobalStore = () => {
                     idNamePairs: payload.idNamePairs,
                     currentList: payload.list,
                     newListCounter: store.newListCounter + 1,
-                    isListNameEditActive: true,
-                    isItemEditActive: false,
+                    isListNameEditActive: false,
+                    isItemEditActive: true,
                     listMarkedForDeletion: null
                 });
             }

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Redirect } from 'react-router-dom'
 import ListCard from './ListCard.js'
 import { GlobalStoreContext } from '../store'
 import DeleteModal from './DeleteModal'
@@ -22,6 +22,11 @@ const ListSelector = () => {
             items: ["?", "?", "?", "?", "?"]
         });
     }
+    
+    if (store.isItemEditActive && store.currentList) {
+        return <Redirect to={`/top5list/${store.currentList._id}`}/>
+    }
+
     return (
         <div id="top5-list-selector">
             <div id="list-selector-heading">
