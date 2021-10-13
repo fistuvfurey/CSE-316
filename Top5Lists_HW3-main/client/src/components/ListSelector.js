@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import ListCard from './ListCard.js'
 import { GlobalStoreContext } from '../store'
@@ -16,15 +16,11 @@ const ListSelector = () => {
         store.loadIdNamePairs();
     }, []);
 
-    let listCard = "";
-    if (store) {
-        listCard = store.idNamePairs.map((pair) => (
-            <ListCard
-                key={pair._id}
-                idNamePair={pair}
-                selected={false}
-            />
-        ))
+    const handleClick = (event) => {
+        store.createList({
+            name: "Untitled",
+            items: ["?", "?", "?", "?", "?"]
+        });
     }
     return (
         <div id="top5-list-selector">
@@ -33,12 +29,19 @@ const ListSelector = () => {
                     type="button"
                     id="add-list-button"
                     className="top5-button"
+                    onClick={handleClick}
                     value="+" />
                 Your Lists
             </div>
             <div id="list-selector-list">
                 {
-                    listCard
+                    store && store.idNamePairs && store.idNamePairs.map((pair) => (
+                        <ListCard
+                            key={pair._id}
+                            idNamePair={pair}
+                            selected={false}
+                        />
+                    ))
                 }
                 <DeleteModal />
             </div>
