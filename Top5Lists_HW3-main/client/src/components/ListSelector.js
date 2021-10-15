@@ -23,7 +23,7 @@ const ListSelector = () => {
         });
     }
     
-    if (store.isItemEditActive && store.currentList) {
+    if (store.currentList) {
         return <Redirect to={`/top5list/${store.currentList._id}`}/>
     }
 

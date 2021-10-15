@@ -9,6 +9,8 @@ import { GlobalStoreContext } from '../store'
 function Top5Item(props) {
     const { store } = useContext(GlobalStoreContext);
     const [draggedTo, setDraggedTo] = useState(0);
+    const [ editActive, setEditActive ] = useState(false);
+    const [ item, setItem] = useState("");
 
     function handleDragStart(event) {
         event.dataTransfer.setData("item", event.target.id);
@@ -28,6 +30,30 @@ function Top5Item(props) {
         setDraggedTo(false);
     }
 
+    function handleToggleEdit(event) {
+        event.stopPropagation();
+        toggleEdit();
+    }
+
+    function toggleEdit() {
+        let newActive = !editActive;
+        if (newActive) {
+            store.setIsItemEditActive();
+        }
+        setEditActive(newActive);
+    }
+
+    function handleKeyPress(event) {
+        if (event.code === "Enter") {
+            let target = event.target;
+            let targetId = target.id;
+            targetId = targetId.substring(target.id.indexOf("-") + 1);
+            // UPDATE THE LIST
+            store.addChangeItemTransaction(targetId, item);
+            toggleEdit();
+        }
+    }
+
     function handleDrop(event) {
         event.preventDefault();
         let target = event.target;
@@ -41,12 +67,16 @@ function Top5Item(props) {
         store.addMoveItemTransaction(sourceId, targetId);
     }
 
+    function handleUpdateText(event) {
+        setItem(event.target.value);
+    }
+
     let { index } = props;
     let itemClass = "top5-item";
     if (draggedTo) {
         itemClass = "top5-item-dragged-to";
     }
-    return (
+    let cardElement = 
         <div
             id={'item-' + (index + 1)}
             className={itemClass}
@@ -61,10 +91,25 @@ function Top5Item(props) {
                 type="button"
                 id={"edit-item-" + index + 1}
                 className="list-card-button"
+                onClick={handleToggleEdit}
                 value={"\u270E"}
             />
             {props.text}
-        </div>)
+        </div>;
+
+    if (editActive) {
+        cardElement = 
+            <input
+                id={'item-' + (index + 1)}
+                className={itemClass}
+                type='text'
+                onKeyPress={handleKeyPress}
+                onChange={handleUpdateText}
+            />;
+    }
+    return (
+        cardElement
+    );
 }
 
 export default Top5Item;
