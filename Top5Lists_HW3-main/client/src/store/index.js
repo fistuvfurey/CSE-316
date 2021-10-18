@@ -327,13 +327,19 @@ export const useGlobalStore = () => {
         });
     }
 
-    store.markListForDeletion = function (listId) {
-        storeReducer({
-            type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
-            payload: listId
-        });
-        // PROMPT THE USER
-        store.showDeleteListModal();
+    store.markListForDeletion = async function (listId) {
+        try {
+            const getListRes = await api.getTop5ListById(listId);
+            let list = getListRes.data.top5List;
+            storeReducer({
+                type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
+                payload: list
+            });
+            // PROMPT THE USER
+            store.showDeleteListModal();
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
@@ -350,9 +356,9 @@ export const useGlobalStore = () => {
     }
 
     store.deleteMarkedList = async function () {
-        console.log("Deleting list id: ", store.listMarkedForDeletion);
+        console.log("Deleting list id: ", store.listMarkedForDeletion._id);
         try {
-            const deletionResp = await api.deleteTop5ListById(store.listMarkedForDeletion);
+            const deletionResp = await api.deleteTop5ListById(store.listMarkedForDeletion._id);
             console.log("deletion successful");
             const pairsResp = await api.getTop5ListPairs();
             let pairsArray = pairsResp.data.idNamePairs;
