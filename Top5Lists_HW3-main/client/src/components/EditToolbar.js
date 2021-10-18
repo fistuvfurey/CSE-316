@@ -48,7 +48,7 @@ function EditToolbar() {
                 disabled={editStatus}
                 id='close-button'
                 onClick={handleClose}
-                className={enabledButtonClass}>
+                className={store.currentList ? enabledButtonClass : disabledButtonClass }>
                 &#x24E7;
             </div>
         </div>
