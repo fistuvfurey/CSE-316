@@ -199,6 +199,9 @@ export const useGlobalStore = () => {
         async function asyncLoadIdNamePairs() {
             const response = await api.getTop5ListPairs();
             if (response.data.success) {
+                if (response.data.noListFound) {
+                    console.log("No lists found.")
+                }
                 let pairsArray = response.data.idNamePairs;
                 storeReducer({
                     type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
