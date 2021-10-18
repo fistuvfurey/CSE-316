@@ -353,11 +353,14 @@ export const useGlobalStore = () => {
         console.log("Deleting list id: ", store.listMarkedForDeletion);
         try {
             const deletionResp = await api.deleteTop5ListById(store.listMarkedForDeletion);
+            console.log("deletion successful");
+            const pairsResp = await api.getTop5ListPairs();
+            let pairsArray = pairsResp.data.idNamePairs;
             console.log(deletionResp);
             store.hideDeleteListModal();
             storeReducer({
                 type: GlobalStoreActionType.DELETE_LIST,
-                payload: null
+                payload: pairsArray
             });
         } catch (err) {
             console.log(err);
