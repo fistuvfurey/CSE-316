@@ -18,7 +18,7 @@ const ListSelector = () => {
 
     const handleClick = (event) => {
         store.createList({
-            name: "Untitled",
+            name: "Untitled" + store.newListCounter,
             items: ["?", "?", "?", "?", "?"]
         });
     }

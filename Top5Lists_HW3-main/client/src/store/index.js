@@ -26,7 +26,7 @@ export const GlobalStoreActionType = {
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
-const tps = new jsTPS();
+export const tps = new jsTPS();
 
 // WITH THIS WE'RE MAKING OUR GLOBAL DATA STORE
 // AVAILABLE TO THE REST OF THE APPLICATION
@@ -38,7 +38,9 @@ export const useGlobalStore = () => {
         newListCounter: 0,
         listNameActive: false,
         itemActive: false,
-        listMarkedForDeletion: null
+        listMarkedForDeletion: null,
+        hasTransactionToUndo: tps.hasTransactionToUndo(),
+        hasTransactionToRedo: tps.hasTransactionToRedo()
     });
 
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
@@ -54,7 +56,9 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: store.listMarkedForDeletion
+                    listMarkedForDeletion: store.listMarkedForDeletion,
+                    hasTransactionToUndo: tps.hasTransactionToUndo(),
+                    hasTransactionToRedo: tps.hasTransactionToRedo()
                 });
             }
             // STOP EDITING THE CURRENT LIST
@@ -65,7 +69,9 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: store.listMarkedForDeletion
+                    listMarkedForDeletion: store.listMarkedForDeletion,
+                    hasTransactionToUndo: tps.hasTransactionToUndo(),
+                    hasTransactionToRedo: tps.hasTransactionToRedo()
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -76,7 +82,9 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: store.listMarkedForDeletion
+                    listMarkedForDeletion: store.listMarkedForDeletion,
+                    hasTransactionToUndo: tps.hasTransactionToUndo(),
+                    hasTransactionToRedo: tps.hasTransactionToRedo()
                 });
             }
             // UPDATE A LIST
@@ -87,7 +95,9 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: store.listMarkedForDeletion
+                    listMarkedForDeletion: store.listMarkedForDeletion,
+                    hasTransactionToUndo: tps.hasTransactionToUndo(),
+                    hasTransactionToRedo: tps.hasTransactionToRedo()
                 });
             }
             // START EDITING A LIST NAME
@@ -98,7 +108,9 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: true,
                     isItemEditActive: false,
-                    listMarkedForDeletion: store.listMarkedForDeletion
+                    listMarkedForDeletion: store.listMarkedForDeletion,
+                    hasTransactionToUndo: tps.hasTransactionToUndo(),
+                    hasTransactionToRedo: tps.hasTransactionToRedo()
                 });
             }
             // START EDITING A ITEM
@@ -109,7 +121,9 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: true,
-                    listMarkedForDeletion: store.listMarkedForDeletion
+                    listMarkedForDeletion: store.listMarkedForDeletion,
+                    hasTransactionToUndo: tps.hasTransactionToUndo(),
+                    hasTransactionToRedo: tps.hasTransactionToRedo()
                 });
             }
             // CREATE A NEW LIST
@@ -120,7 +134,9 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter + 1,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: store.listMarkedForDeletion
+                    listMarkedForDeletion: store.listMarkedForDeletion,
+                    hasTransactionToUndo: tps.hasTransactionToUndo(),
+                    hasTransactionToRedo: tps.hasTransactionToRedo()
                 });
             }
             // MARK A LIST FOR DELETION
@@ -131,7 +147,9 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: payload
+                    listMarkedForDeletion: payload,
+                    hasTransactionToUndo: tps.hasTransactionToUndo(),
+                    hasTransactionToRedo: tps.hasTransactionToRedo()
                 });
             }
             // DELETE THE LIST MARKED FOR DELETION
@@ -142,7 +160,9 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    hasTransactionToUndo: tps.hasTransactionToUndo(),
+                    hasTransactionToRedo: tps.hasTransactionToRedo()
                 });
             }
             default:
