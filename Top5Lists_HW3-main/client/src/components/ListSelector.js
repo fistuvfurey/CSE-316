@@ -27,13 +27,22 @@ const ListSelector = () => {
         return <Redirect to={`/top5list/${store.currentList._id}`}/>
     }
 
+    let enabledButtonClass = "top5-button";
+    let disabledButtonClass = "top5-button-disabled";
+    
+    let listNameEditStatus = false;
+    if (store.isListNameEditActive) {
+        listNameEditStatus = true;
+    }
+
     return (
         <div id="top5-list-selector">
             <div id="list-selector-heading">
                 <input
                     type="button"
                     id="add-list-button"
-                    className="top5-button"
+                    disabled={listNameEditStatus}
+                    className={store.isListNameEditActive ? disabledButtonClass : enabledButtonClass}
                     onClick={handleClick}
                     value="+" />
                 Your Lists
