@@ -16,6 +16,52 @@ getLoggedIn = async (req, res) => {
     })
 }
 
+login = async (req, res) => {
+    try { 
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res
+                .status(400)
+                .json({ errorMessage: "Please enter all required fields." });
+        }
+
+        const user = await User.findOne({ email: email });
+        if (!user) {
+            return res
+                .status(400)
+                .json({ errorMessage: "Wrong email or password." });
+        }
+
+        const passwordCorrect = await bcrypt.compare(password, user.passwordHash);
+        if (!passwordCorrect) {
+            return res
+                .status(400)
+                .json({
+                    errorMessage: "Wrong email or password."
+                })
+        }
+
+        // LOGIN THE USER
+        const token = auth.signToken(user);
+
+        await res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none"
+        }).status(200).json({
+            success: true,
+            user: {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email
+            }
+        }).send();
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+}
+
 registerUser = async (req, res) => {
     try {
         const { firstName, lastName, email, password, passwordVerify } = req.body;
@@ -80,5 +126,6 @@ registerUser = async (req, res) => {
 
 module.exports = {
     getLoggedIn,
-    registerUser
+    registerUser, 
+    login
 }
