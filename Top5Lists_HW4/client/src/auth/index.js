@@ -9,13 +9,16 @@ console.log("create AuthContext: " + AuthContext);
 export const AuthActionType = {
     GET_LOGGED_IN: "GET_LOGGED_IN",
     REGISTER_USER: "REGISTER_USER",
-    LOGIN_USER: "LOGIN_USER"
+    LOGIN_USER: "LOGIN_USER",
+    TOGGLE_IS_FAILURE: "TOGGLE_IS_FAILURE"
 }
 
 function AuthContextProvider(props) {
     const [auth, setAuth] = useState({
         user: null,
-        loggedIn: false
+        loggedIn: false,
+        isFailure: false, 
+        errMessage: null
     });
     const history = useHistory();
 
@@ -29,20 +32,34 @@ function AuthContextProvider(props) {
             case AuthActionType.GET_LOGGED_IN: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: payload.loggedIn
+                    loggedIn: payload.loggedIn,
+                    isFailure: false,
+                    errMessage: null
                 });
             }
             case AuthActionType.REGISTER_USER: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: true
-                })
+                    loggedIn: true,
+                    isFailure: false,
+                    errMessage: null
+                });
             }
             case AuthActionType.LOGIN_USER: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: true
-                })
+                    loggedIn: true,
+                    isFailure: false,
+                    errMessage: null
+                });
+            }
+            case AuthActionType.TOGGLE_IS_FAILURE: {
+                return setAuth({
+                    user: auth.user,
+                    loggedIn: auth.loggedIn,
+                    isFailure: !auth.isFailure,
+                    errMessage: payload
+                });
             }
             default:
                 return auth;
@@ -77,8 +94,8 @@ function AuthContextProvider(props) {
     }
 
     auth.login = async function(userData, store) {
-        const response = await api.login(userData);
-        if (response.status === 200) {
+        try {
+            const response = await api.login(userData);
             authReducer({
                 type: AuthActionType.LOGIN_USER,
                 payload: {
@@ -87,7 +104,18 @@ function AuthContextProvider(props) {
             })
             history.push("/");
             store.loadIdNamePairs();
+        } catch (err) {
+            let errMessage = err.response.data.errorMessage;
+            console.log(errMessage);
+            auth.toggleErrStatus(errMessage);
         }
+    }
+
+    auth.toggleErrStatus = function(errMessage) {
+        authReducer({
+            type: AuthActionType.TOGGLE_IS_FAILURE,
+            payload: errMessage
+        });
     }
 
     return (

@@ -1,6 +1,10 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import AuthContext from '../auth';
 import Copyright from './Copyright';
+import Alert from '@mui/material/Alert';
+import IconButton from '@mui/material/IconButton';
+import Collapse from '@mui/material/Collapse';
+import CloseIcon from '@mui/icons-material/Close';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -16,24 +20,11 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GlobalStoreContext } from '../store'
 
-// function Copyright(props) {
-//   return (
-//     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-//       {'Copyright © '}
-//       <Link color="inherit" href="https://mui.com/">
-//         Your Website
-//       </Link>{' '}
-//       {new Date().getFullYear()}
-//       {'.'}
-//     </Typography>
-//   );
-// }
-
 const theme = createTheme();
 
 export default function SignInSide() {
   const { auth } = useContext(AuthContext);
-  const { store } = useContext(GlobalStoreContext)
+  const { store } = useContext(GlobalStoreContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -46,6 +37,28 @@ export default function SignInSide() {
 
   return (
     <ThemeProvider theme={theme}>
+      <div> 
+        { auth.isFailure ? 
+        <Box sx={{ width: '100%' }}>
+        <Collapse in={auth.isFailure}>
+          <Alert
+            severity="error"
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  auth.toggleErrStatus();
+                }}>
+                <CloseIcon fontSize="inherit" />
+              </IconButton>}
+            sx={{ mb: 2 }}>
+            {auth.errMessage}
+          </Alert>
+        </Collapse>
+      </Box> : null } 
+    </div>
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
