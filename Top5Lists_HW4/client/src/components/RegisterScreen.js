@@ -1,6 +1,10 @@
 import { useContext } from 'react';
 import AuthContext from '../auth'
 import Copyright from './Copyright'
+import Alert from '@mui/material/Alert';
+import IconButton from '@mui/material/IconButton';
+import Collapse from '@mui/material/Collapse';
+import CloseIcon from '@mui/icons-material/Close';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -31,6 +35,28 @@ export default function RegisterScreen() {
 
     return (
             <Container component="main" maxWidth="xs">
+                <div>
+                    { auth.isFailure ? 
+                    <Box sx={{ width: '100%' }}>
+                    <Collapse in={auth.isFailure}>
+                      <Alert
+                        severity="error"
+                        action={
+                          <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            size="small"
+                            onClick={() => {
+                              auth.toggleErrStatus();
+                            }}>
+                            <CloseIcon fontSize="inherit" />
+                          </IconButton>}
+                        sx={{ mb: 2 }}>
+                        {auth.errMessage}
+                      </Alert>
+                    </Collapse>
+                  </Box> : null }
+                </div>
                 <CssBaseline />
                 <Box
                     sx={{
@@ -38,8 +64,7 @@ export default function RegisterScreen() {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                    }}
-                >
+                    }}>
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                         <LockOutlinedIcon />
                     </Avatar>
@@ -106,8 +131,7 @@ export default function RegisterScreen() {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
+                            sx={{ mt: 3, mb: 2 }}>
                             Sign Up
                         </Button>
                         <Grid container justifyContent="flex-end">
