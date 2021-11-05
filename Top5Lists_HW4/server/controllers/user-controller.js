@@ -64,13 +64,7 @@ login = async (req, res) => {
 
 logout = async (req, res) => {
     try {
-        await res.cookie("token", null, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "none"
-        }).status(200).json({
-            success: true
-        }).send();
+        await res.clearCookie("token").status(200).json({ success: true }).send();
     } catch (err) {
         console.log(err);
         res.status(500).send();

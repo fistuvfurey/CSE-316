@@ -1,4 +1,5 @@
 const Top5List = require('../models/top5list-model');
+const jwt = require("jsonwebtoken")
 
 createTop5List = (req, res) => {
     const body = req.body;
@@ -109,7 +110,9 @@ getTop5Lists = async (req, res) => {
     }).catch(err => console.log(err))
 }
 getTop5ListPairs = async (req, res) => {
-    await Top5List.find({ }, (err, top5Lists) => {
+    let decodedToken = jwt.decode(req.cookies.token);
+    let email = decodedToken.user.email;
+    await Top5List.find({ ownerEmail: email }, (err, top5Lists) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
