@@ -10,7 +10,8 @@ export const AuthActionType = {
     GET_LOGGED_IN: "GET_LOGGED_IN",
     REGISTER_USER: "REGISTER_USER",
     LOGIN_USER: "LOGIN_USER",
-    TOGGLE_IS_FAILURE: "TOGGLE_IS_FAILURE"
+    TOGGLE_IS_FAILURE: "TOGGLE_IS_FAILURE",
+    LOGOUT_USER: "LOGOUT_USER"
 }
 
 function AuthContextProvider(props) {
@@ -59,6 +60,14 @@ function AuthContextProvider(props) {
                     loggedIn: auth.loggedIn,
                     isFailure: !auth.isFailure,
                     errMessage: payload
+                });
+            }
+            case AuthActionType.LOGOUT_USER: {
+                return setAuth({
+                    user: null,
+                    loggedIn: false,
+                    isFailure: false,
+                    errMessage: null
                 });
             }
             default:
@@ -112,6 +121,19 @@ function AuthContextProvider(props) {
             let errMessage = err.response.data.errorMessage;
             console.log(errMessage);
             auth.toggleErrStatus(errMessage);
+        }
+    }
+
+    auth.logoutUser = async function() {
+        try {
+            const response = await api.logoutUser();
+            authReducer({
+                type: AuthActionType.LOGOUT_USER,
+                payload: null
+            });
+            history.push("/");
+        } catch (err) {
+            console.log(err.response.data.errorMessage);
         }
     }
 
