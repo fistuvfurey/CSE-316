@@ -1,5 +1,5 @@
 const Top5List = require('../models/top5list-model');
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
 createTop5List = (req, res) => {
     const body = req.body;
@@ -42,7 +42,8 @@ updateTop5List = async (req, res) => {
             error: 'You must provide a body to update',
         })
     }
-
+    let decodedToken = jwt.decode(req.cookies.token);
+    let email = decodedToken.user.email;
     Top5List.findOne({ _id: req.params.id }, (err, top5List) => {
         console.log("top5List found: " + JSON.stringify(top5List));
         if (err) {
@@ -50,6 +51,9 @@ updateTop5List = async (req, res) => {
                 err,
                 message: 'Top 5 List not found!',
             })
+        }
+        if (top5List.ownerEmail != email) {
+            return res.status(400).json({ success: false, error: `Invalid user`})
         }
 
         top5List.name = body.name
@@ -75,12 +79,17 @@ updateTop5List = async (req, res) => {
 }
 
 deleteTop5List = async (req, res) => {
+    let decodedToken = jwt.decode(req.cookies.token);
+    let email = decodedToken.user.email;
     Top5List.findById({ _id: req.params.id }, (err, top5List) => {
         if (err) {
             return res.status(404).json({
                 err,
                 message: 'Top 5 List not found!',
             })
+        }
+        if (top5List.ownerEmail != email) {
+            return res.status(400).json({ success: false, error: `Invalid user`})
         }
         Top5List.findOneAndDelete({ _id: req.params.id }, () => {
             return res.status(200).json({ success: true, data: top5List })
@@ -89,13 +98,19 @@ deleteTop5List = async (req, res) => {
 }
 
 getTop5ListById = async (req, res) => {
+    let decodedToken = jwt.decode(req.cookies.token);
+    let email = decodedToken.user.email;
     await Top5List.findById({ _id: req.params.id }, (err, list) => {
         if (err) {
             return res.status(400).json({ success: false, error: err });
         }
+        if (list.ownerEmail != email) {
+            return res.status(400).json({ success: false, error: `Invalid user`})
+        }
         return res.status(200).json({ success: true, top5List: list })
     }).catch(err => console.log(err))
 }
+
 getTop5Lists = async (req, res) => {
     await Top5List.find({}, (err, top5Lists) => {
         if (err) {
@@ -109,6 +124,7 @@ getTop5Lists = async (req, res) => {
         return res.status(200).json({ success: true, data: top5Lists })
     }).catch(err => console.log(err))
 }
+
 getTop5ListPairs = async (req, res) => {
     let decodedToken = jwt.decode(req.cookies.token);
     let email = decodedToken.user.email;
