@@ -73,8 +73,22 @@ export default function AppBanner() {
 
     let editToolbar = "";
     let menu = loggedOutMenu;
+    let userInitials = null;
     if (auth.loggedIn) {
         menu = loggedInMenu;
+        
+        userInitials = 
+        <Box 
+        sx={{ padding: 2 }}>
+            <Typography
+            variant="h5"
+            noWrap
+            component="div"
+            align="right">
+                AF
+            </Typography>
+        </Box>
+
         if (store.currentList) {
             editToolbar = <EditToolbar />;
         }
@@ -109,6 +123,11 @@ export default function AppBanner() {
                         >
                             { getAccountMenu(auth.loggedIn) }
                         </IconButton>
+                    </Box>
+                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                    {
+                        userInitials
+                    }
                     </Box>
                 </Toolbar>
             </AppBar>
