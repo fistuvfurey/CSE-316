@@ -40,8 +40,8 @@ function GlobalStoreContextProvider(props) {
         idNamePairs: [],
         currentList: null,
         newListCounter: 0,
-        listNameActive: false,
-        itemActive: false,
+        isListNameEditActive: false,
+        isItemEditActive: false,
         listMarkedForDeletion: null
     });
     const history = useHistory();
@@ -164,6 +164,7 @@ function GlobalStoreContextProvider(props) {
 
     // THIS FUNCTION PROCESSES CHANGING A LIST NAME
     store.changeListName = async function (id, newName) {
+        store.setIsListNameEditActive();
         let response = await api.getTop5ListById(id);
         if (response.data.success) {
             let top5List = response.data.top5List;
@@ -307,6 +308,7 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.addUpdateItemTransaction = function (index, newText) {
+        store.setIsItemEditActive();
         let oldText = store.currentList.items[index];
         let transaction = new UpdateItem_Transaction(store, index, oldText, newText);
         tps.addTransaction(transaction);
