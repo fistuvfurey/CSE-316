@@ -11,7 +11,8 @@ export const AuthActionType = {
     REGISTER_USER: "REGISTER_USER",
     LOGIN_USER: "LOGIN_USER",
     TOGGLE_IS_FAILURE: "TOGGLE_IS_FAILURE",
-    LOGOUT_USER: "LOGOUT_USER"
+    LOGOUT_USER: "LOGOUT_USER",
+    SET_LOGGED_IN: "SET_LOGGED_IN"
 }
 
 function AuthContextProvider(props) {
@@ -70,14 +71,23 @@ function AuthContextProvider(props) {
                     errMessage: null
                 });
             }
+            case AuthActionType.SET_LOGGED_IN: {
+                return setAuth({
+                    user: payload.user,
+                    loggedIn: payload.loggedIn,
+                    isFailure: false,
+                    errMessage: null
+                });
+            }
             default:
                 return auth;
         }
     }
 
     auth.getLoggedIn = async function () {
-        const response = await api.getLoggedIn();
-        if (response.status === 200) {
+        try {
+            const response = await api.getLoggedIn();
+            console.log("Response:", response);
             authReducer({
                 type: AuthActionType.SET_LOGGED_IN,
                 payload: {
@@ -85,6 +95,8 @@ function AuthContextProvider(props) {
                     user: response.data.user
                 }
             });
+        } catch (err) {
+            console.log("No user logged in.");
         }
     }
 

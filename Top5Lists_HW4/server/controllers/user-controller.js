@@ -1,10 +1,12 @@
 const auth = require('../auth')
 const User = require('../models/user-model')
 const bcrypt = require('bcryptjs')
+const jwt = require("jsonwebtoken")
 
 getLoggedIn = async (req, res) => {
     auth.verify(req, res, async function () {
-        const loggedInUser = await User.findOne({ _id: req.userId });
+        let decodedToken = jwt.decode(req.cookies.token);
+        const loggedInUser = await User.findOne({ _id: decodedToken.user._id });
         return res.status(200).json({
             loggedIn: true,
             user: {
