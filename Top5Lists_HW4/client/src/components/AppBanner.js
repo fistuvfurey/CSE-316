@@ -85,7 +85,7 @@ export default function AppBanner() {
             noWrap
             component="div"
             align="right">
-                AF
+                { auth.user.firstName.charAt(0).toUpperCase() + auth.user.lastName.charAt(0).toUpperCase() }
             </Typography>
         </Box>
 

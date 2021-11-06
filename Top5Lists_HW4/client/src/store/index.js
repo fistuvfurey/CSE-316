@@ -260,10 +260,13 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.deleteList = async function (listToDelete) {
-        let response = await api.deleteTop5ListById(listToDelete._id);
-        if (response.data.success) {
+        try {
+            let response = await api.deleteTop5ListById(listToDelete._id);
             store.loadIdNamePairs();
             history.push("/");
+        } catch (err) {
+            let errMessage = err.response.data.errorMessage;
+            console.log(errMessage);
         }
     }
 
