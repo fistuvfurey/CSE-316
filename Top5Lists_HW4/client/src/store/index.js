@@ -165,30 +165,34 @@ function GlobalStoreContextProvider(props) {
     // THIS FUNCTION PROCESSES CHANGING A LIST NAME
     store.changeListName = async function (id, newName) {
         store.setIsListNameEditActive();
-        let response = await api.getTop5ListById(id);
-        if (response.data.success) {
-            let top5List = response.data.top5List;
-            top5List.name = newName;
-            async function updateList(top5List) {
-                response = await api.updateTop5ListById(top5List._id, top5List);
-                if (response.data.success) {
-                    async function getListPairs(top5List) {
-                        response = await api.getTop5ListPairs();
-                        if (response.data.success) {
-                            let pairsArray = response.data.idNamePairs;
-                            storeReducer({
-                                type: GlobalStoreActionType.CHANGE_LIST_NAME,
-                                payload: {
-                                    idNamePairs: pairsArray,
-                                    top5List: top5List
-                                }
-                            });
+        try {
+            let response = await api.getTop5ListById(id);
+            if (response.data.success) {
+                let top5List = response.data.top5List;
+                top5List.name = newName;
+                async function updateList(top5List) {
+                    response = await api.updateTop5ListById(top5List._id, top5List);
+                    if (response.data.success) {
+                        async function getListPairs(top5List) {
+                            response = await api.getTop5ListPairs();
+                            if (response.data.success) {
+                                let pairsArray = response.data.idNamePairs;
+                                storeReducer({
+                                    type: GlobalStoreActionType.CHANGE_LIST_NAME,
+                                    payload: {
+                                        idNamePairs: pairsArray,
+                                        top5List: top5List
+                                    }
+                                });
+                            }
                         }
+                        getListPairs(top5List);
                     }
-                    getListPairs(top5List);
                 }
+                updateList(top5List);
             }
-            updateList(top5List);
+        } catch (err) {
+            console.log(err.response.data.errorMessage);
         }
     }
 
@@ -211,36 +215,45 @@ function GlobalStoreContextProvider(props) {
             items: ["?", "?", "?", "?", "?"],
             ownerEmail: auth.user.email
         };
-        const response = await api.createTop5List(payload);
-        if (response.data.success) {
-            tps.clearAllTransactions();
-            let newList = response.data.top5List;
-            storeReducer({
-                type: GlobalStoreActionType.CREATE_NEW_LIST,
-                payload: newList
-            }
-            );
+        try {
+            const response = await api.createTop5List(payload);
+            if (response.data.success) {
+                tps.clearAllTransactions();
+                let newList = response.data.top5List;
+                storeReducer({
+                    type: GlobalStoreActionType.CREATE_NEW_LIST,
+                    payload: newList
+                }
+                );
 
-            // IF IT'S A VALID LIST THEN LET'S START EDITING IT
-            history.push("/top5list/" + newList._id);
-        }
-        else {
-            console.log("API FAILED TO CREATE A NEW LIST");
+                // IF IT'S A VALID LIST THEN LET'S START EDITING IT
+                history.push("/top5list/" + newList._id);
+            }
+            else {
+                console.log("API FAILED TO CREATE A NEW LIST");
+            }
+        } catch (err) {
+            console.log(err.response.data.errorMessage);
         }
     }
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
     store.loadIdNamePairs = async function () {
-        const response = await api.getTop5ListPairs();
-        if (response.data.success) {
-            let pairsArray = response.data.idNamePairs;
-            storeReducer({
-                type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
-                payload: pairsArray
-            });
+        try {
+            const response = await api.getTop5ListPairs();
+            if (response.data.success) {
+                let pairsArray = response.data.idNamePairs;
+                storeReducer({
+                    type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
+                    payload: pairsArray
+                });
+            }
+            else {
+                console.log("API FAILED TO GET THE LIST PAIRS");
+            }
         }
-        else {
-            console.log("API FAILED TO GET THE LIST PAIRS");
+        catch (err) {
+            console.log(err.response.data.errorMessage);
         }
     }
 
@@ -250,13 +263,17 @@ function GlobalStoreContextProvider(props) {
     // showDeleteListModal, and hideDeleteListModal
     store.markListForDeletion = async function (id) {
         // GET THE LIST
-        let response = await api.getTop5ListById(id);
-        if (response.data.success) {
-            let top5List = response.data.top5List;
-            storeReducer({
-                type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
-                payload: top5List
-            });
+        try {
+            let response = await api.getTop5ListById(id);
+            if (response.data.success) {
+                let top5List = response.data.top5List;
+                storeReducer({
+                    type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
+                    payload: top5List
+                });
+            }
+        } catch (err) {
+            console.log(err.response.data.errorMessage);
         }
     }
 
@@ -287,18 +304,22 @@ function GlobalStoreContextProvider(props) {
     // FUNCTIONS ARE setCurrentList, addMoveItemTransaction, addUpdateItemTransaction,
     // moveItem, updateItem, updateCurrentList, undo, and redo
     store.setCurrentList = async function (id) {
-        let response = await api.getTop5ListById(id);
-        if (response.data.success) {
-            let top5List = response.data.top5List;
-
-            response = await api.updateTop5ListById(top5List._id, top5List);
+        try {
+            let response = await api.getTop5ListById(id);
             if (response.data.success) {
-                storeReducer({
-                    type: GlobalStoreActionType.SET_CURRENT_LIST,
-                    payload: top5List
-                });
-                history.push("/top5list/" + top5List._id);
+                let top5List = response.data.top5List;
+
+                response = await api.updateTop5ListById(top5List._id, top5List);
+                if (response.data.success) {
+                    storeReducer({
+                        type: GlobalStoreActionType.SET_CURRENT_LIST,
+                        payload: top5List
+                    });
+                    history.push("/top5list/" + top5List._id);
+                }
             }
+        } catch (err) {
+            console.log(err.response.data.errorMessage);
         }
     }
 
@@ -342,12 +363,16 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.updateCurrentList = async function () {
-        const response = await api.updateTop5ListById(store.currentList._id, store.currentList);
-        if (response.data.success) {
-            storeReducer({
-                type: GlobalStoreActionType.SET_CURRENT_LIST,
-                payload: store.currentList
-            });
+        try {
+            const response = await api.updateTop5ListById(store.currentList._id, store.currentList);
+            if (response.data.success) {
+                storeReducer({
+                    type: GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload: store.currentList
+                });
+            }
+        } catch (err) {
+            console.log(err.response.data.errorMessage);
         }
     }
 
