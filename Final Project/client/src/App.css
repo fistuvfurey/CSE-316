@@ -54,7 +54,7 @@ body {
   border-radius: 10px;
 }
 #splash-screen {
-  background-image: linear-gradient(to bottom, #b8b808, #636723);
+  background-image: linear-gradient(to bottom, #08acb8, #282367);
   color: white;
   font-size: 5vw;
   border-color: black;
@@ -118,7 +118,7 @@ body {
   top: 90%;
   width: 100%;
   height: 10%;
-  background-color: lightsalmon;
+  background-color: rgb(82, 114, 218);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -144,7 +144,6 @@ body {
 }
 
 #list-selector-list {
-  position: absolute;
   left: 0%;
   top: 10%;
   width: 100%;

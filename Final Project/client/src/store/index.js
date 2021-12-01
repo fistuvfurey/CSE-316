@@ -323,18 +323,6 @@ function GlobalStoreContextProvider(props) {
         }
     }
 
-    store.addMoveItemTransaction = function (start, end) {
-        let transaction = new MoveItem_Transaction(store, start, end);
-        tps.addTransaction(transaction);
-    }
-
-    store.addUpdateItemTransaction = function (index, newText) {
-        store.setIsItemEditActive();
-        let oldText = store.currentList.items[index];
-        let transaction = new UpdateItem_Transaction(store, index, oldText, newText);
-        tps.addTransaction(transaction);
-    }
-
     store.moveItem = function (start, end) {
         start -= 1;
         end -= 1;
