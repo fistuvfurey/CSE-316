@@ -2,8 +2,6 @@ import { createContext, useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
-import MoveItem_Transaction from '../transactions/MoveItem_Transaction'
-import UpdateItem_Transaction from '../transactions/UpdateItem_Transaction'
 import AuthContext from '../auth'
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -323,6 +321,18 @@ function GlobalStoreContextProvider(props) {
         }
     }
 
+    store.getListById = async function (id) {
+        try {
+            let response = await api.getTop5ListById(id);
+            let top5List = response.data.top5List;
+            console.log(top5List);
+            return top5List;
+            
+        } catch (err) {
+            console.log(err.response.data.errorMessage);
+        }
+    }
+
     store.moveItem = function (start, end) {
         start -= 1;
         end -= 1;
@@ -362,22 +372,6 @@ function GlobalStoreContextProvider(props) {
         } catch (err) {
             console.log(err.response.data.errorMessage);
         }
-    }
-
-    store.undo = function () {
-        tps.undoTransaction();
-    }
-
-    store.redo = function () {
-        tps.doTransaction();
-    }
-
-    store.canUndo = function() {
-        return tps.hasTransactionToUndo();
-    }
-
-    store.canRedo = function() {
-        return tps.hasTransactionToRedo();
     }
 
     // THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME

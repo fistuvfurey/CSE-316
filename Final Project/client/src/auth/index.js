@@ -155,6 +155,15 @@ function AuthContextProvider(props) {
         });
     }
 
+    auth.getUserByEmail = async function(email) {
+        try {
+            const response = await api.getUserByEmail(email);
+            return response.data.user;
+        } catch (err) {
+            console.log(err.response.data.errorMessage);
+        }
+    }
+
     return (
         <AuthContext.Provider value={{
             auth
