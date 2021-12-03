@@ -56,8 +56,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function NavBar() {
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+    <Box sx={{ flexGrow: 1}}>
+      <AppBar position="static" sx={{ boxShadow: 0 }}>
         <Toolbar>
         <IconButton color="inherit" aria-label="your lists" component="span">
             <HomeIcon fontSize="large"/>
