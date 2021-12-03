@@ -15,7 +15,7 @@ const HomeScreen = () => {
     const { store } = useContext(GlobalStoreContext);
 
     useEffect(() => {
-        store.loadIdNamePairs();
+        store.loadLists();
     }, []);
 
     function handleCreateNewList() {
@@ -26,10 +26,10 @@ const HomeScreen = () => {
         listCard = 
             <List sx={{ width: '90%', left: '5%', bgcolor: 'background.paper' }}>
             {
-                store.idNamePairs.map((pair) => (
+                store.lists.map((list) => (
                     <ListCard
-                        key={pair._id}
-                        idNamePair={pair}
+                        key={list._id}
+                        list={list}
                         selected={false}
                     />
                 ))

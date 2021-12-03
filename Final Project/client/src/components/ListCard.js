@@ -17,12 +17,11 @@ import { ListCardButtons } from '.';
 */
 function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
-    const { idNamePair } = props;
+    const { list } = props;
 
     async function handleDeleteList(event, id) {
         event.stopPropagation();
         store.markListForDeletion(id);
-        console.log(idNamePair);
     }
         
     return (
@@ -31,7 +30,7 @@ function ListCard(props) {
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <CardContent>
                         <Box sx={{ flexGrow: 1}}>
-                            <Typography>{idNamePair.name}</Typography>
+                            <Typography>{list.name}</Typography>
                             <Typography>By: user name</Typography>
                             <Typography>Edit</Typography>
                         </Box>

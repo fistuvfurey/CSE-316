@@ -14,12 +14,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 function ListCardButtons(props) {
     
     const { store } = useContext(GlobalStoreContext);
-    const { idNamePair } = props;
+    const { list } = props;
 
     async function handleDeleteList(event, id) {
         event.stopPropagation();
         store.markListForDeletion(id);
-        console.log(idNamePair);
     }
         
     return (
@@ -33,7 +32,7 @@ function ListCardButtons(props) {
                 <Typography>40</Typography>
             </IconButton>
             <IconButton onClick={(event) => {
-                handleDeleteList(event, idNamePair._id)
+                handleDeleteList(event, list._id)
             }} aria-label='delete'>
                 <DeleteIcon style={{ fontSize: '24pt' }}></DeleteIcon>
             </IconButton>

@@ -109,7 +109,7 @@ function AuthContextProvider(props) {
                 }
             });
             history.push("/");
-            store.loadIdNamePairs();
+            store.loadLists();
         } catch (err) {
             let errMessage = err.response.data.errorMessage;
             console.log(errMessage);
@@ -127,7 +127,7 @@ function AuthContextProvider(props) {
                 }
             });
             history.push("/");
-            store.loadIdNamePairs();
+            store.loadLists();
         } catch (err) {
             let errMessage = err.response.data.errorMessage;
             console.log(errMessage);

@@ -54,6 +54,22 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+function handleHomeButton(event, id) {
+  event.stopPropagation();
+}
+
+function handleAllListsButton(event, id) {
+  event.stopPropagation();
+}
+
+function handleUsersListsButtion(event, id) {
+  event.stopPropagation();
+}
+
+function handleCommunityListsButton(event, id) {
+  event.stopPropagation();
+}
+
 export default function NavBar() {
   return (
     <Box sx={{ flexGrow: 1}}>
