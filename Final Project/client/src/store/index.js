@@ -1,7 +1,8 @@
 import { createContext, useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import api, { getLists } from '../api'
+import api from '../api'
 import AuthContext from '../auth'
+
 /*
     This is our global data store. Note that it uses the Flux design pattern,
     which makes use of things like actions and reducers. 
@@ -20,6 +21,7 @@ export const GlobalStoreActionType = {
     LOAD_LISTS: "LOAD_LISTS",
     MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
     UNMARK_LIST_FOR_DELETION: "UNMARK_LIST_FOR_DELETION",
+    SET_CURRENT_LIST: "SET_CURRENT_LIST"
 }
 
 // WITH THIS WE'RE MAKING OUR GLOBAL DATA STORE
@@ -32,6 +34,7 @@ function GlobalStoreContextProvider(props) {
         newListCounter: 0,
         listMarkedForDeletion: null
     });
+    
     const history = useHistory();
 
     // SINCE WE'VE WRAPPED THE STORE IN THE AUTH CONTEXT WE CAN ACCESS THE USER HERE
@@ -46,6 +49,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.CHANGE_LIST_NAME: {
                 return setStore({
                     lists: payload.lists,
+                    currentList: store.currentList,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null
                 });
@@ -57,12 +61,13 @@ function GlobalStoreContextProvider(props) {
                     currentList: payload.currentList,
                     newListCounter: store.newListCounter + 1,
                     listMarkedForDeletion: null
-                })
+                });
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
             case GlobalStoreActionType.LOAD_LISTS: {
                 return setStore({
                     lists: payload,
+                    currentList: null,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null
                 });
@@ -71,6 +76,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.MARK_LIST_FOR_DELETION: {
                 return setStore({
                     lists: store.lists,
+                    currentList: store.currentList,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: payload
                 });
@@ -79,6 +85,15 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.UNMARK_LIST_FOR_DELETION: {
                 return setStore({
                     lists: store.lists,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    listMarkedForDeletion: null
+                });
+            }
+            case GlobalStoreActionType.SET_CURRENT_LIST: {
+                return setStore({
+                    lists: store.lists,
+                    currentList: payload,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null
                 });
@@ -228,15 +243,10 @@ function GlobalStoreContextProvider(props) {
             let response = await api.getTop5ListById(id);
             if (response.data.success) {
                 let top5List = response.data.top5List;
-
-                response = await api.updateTop5ListById(top5List._id, top5List);
-                if (response.data.success) {
-                    storeReducer({
-                        type: GlobalStoreActionType.SET_CURRENT_LIST,
-                        payload: top5List
-                    });
-                    history.push("/top5list/" + top5List._id);
-                }
+                storeReducer({
+                    type: GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload: top5List
+                });
             }
         } catch (err) {
             console.log(err.response.data.errorMessage);

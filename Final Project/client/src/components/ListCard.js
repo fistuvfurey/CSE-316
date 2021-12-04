@@ -23,6 +23,10 @@ function ListCard(props) {
         event.stopPropagation();
         store.markListForDeletion(id);
     }
+
+    const handleEditClick = () => {
+        store.setCurrentList(list._id);
+    }
         
     return (
         <Card sx={{ mb: 1 }}>
@@ -32,7 +36,7 @@ function ListCard(props) {
                         <Box sx={{ flexGrow: 1}}>
                             <Typography>{list.name}</Typography>
                             <Typography>By { list.ownerFirstName } { list.ownerLastName }</Typography>
-                            <Typography>Edit</Typography>
+                            <Button onClick={handleEditClick}>Edit</Button>
                         </Box>
                     </CardContent>
                     <Box sx={{ flexGrow: 1 }}></Box>

@@ -1,4 +1,4 @@
-import { useContext, useState, forwardRef, StrictMode } from 'react'
+import { useContext, forwardRef } from 'react'
 import { GlobalStoreContext } from '../store'
 import { Typography, Button, Dialog, Fab, AppBar, Toolbar, Slide, TextField, Card, Stack, Grid } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
@@ -15,21 +15,15 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 function Statusbar() {
     const { store } = useContext(GlobalStoreContext);
-    const [open, setOpen] = useState(false);
-
     /* Handles opening the full-screen dialog. */
     const handleClickOpen = () => {
-        store.createNewList().then(() => {
-            setOpen(true);
-        });
+        store.createNewList();
     };
 
     /* Handles closing the full-screen dialog when user clicks "save". */
     const handleClose = () => {
         store.updateCurrentList().then(() => {
-            store.loadLists().then(() => {
-                setOpen(false);
-            });  
+            store.loadLists(); 
         });
     };
     
@@ -37,9 +31,7 @@ function Statusbar() {
     const handlePublish = () => {
         store.currentList.isPublished = true;
         store.updateCurrentList().then(() => {
-            store.loadLists().then(() => {
-                setOpen(false);
-            });
+            store.loadLists();
         });
     };
 
@@ -62,7 +54,7 @@ function Statusbar() {
             </Fab>
             <Dialog
         fullScreen
-        open={open}
+        open={store.currentList}
         onClose={handleClose}
         TransitionComponent={Transition}
       >
