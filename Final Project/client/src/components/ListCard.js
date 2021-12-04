@@ -77,13 +77,15 @@ function ListCard(props) {
                     </Stack>
                     <Stack direction="row">
                         <Typography>By {list.ownerUsername}</Typography>
-                        <Box sx={{ paddingLeft: 134 }}>
+                        <Box flex={30}></Box>
+                        <Box sx={{ flexGrow: 1 }}>
                             <ListCardButtons list={list}></ListCardButtons>
                         </Box>
                     </Stack>
                     <Stack direction="row">
                         <Button onClick={handleEditClick}>Edit</Button>
-                        <Typography sx={{ paddingLeft: 150}}>Views: 20</Typography> 
+                        <Box flex={8}></Box>
+                        <Typography sx={{ flex: 1 }}>Views: 20</Typography> 
                     </Stack>
                 </Grid>
             </CardContent>
