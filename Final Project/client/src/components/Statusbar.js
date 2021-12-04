@@ -1,8 +1,7 @@
 import { useContext, useState, forwardRef, StrictMode } from 'react'
 import { GlobalStoreContext } from '../store'
-import { Typography, Button, Dialog, ListItemText, ListItem, List, Fab, Divider, AppBar, Toolbar, IconButton, Slide, TextField, Box, Card, Stack, Grid } from '@mui/material'
+import { Typography, Button, Dialog, Fab, AppBar, Toolbar, Slide, TextField, Card, Stack, Grid } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from '@mui/icons-material/Close';
 
 /*
     Our Status bar React component goes at the bottom of our UI.
@@ -25,20 +24,34 @@ function Statusbar() {
         });
     };
 
-    /* Handles closing the full-screen dialog. */
+    /* Handles closing the full-screen dialog when user clicks "save". */
     const handleClose = () => {
-        store.loadLists().then(() => {
-            setOpen(false);
-        }); 
+        store.updateCurrentList().then(() => {
+            store.loadLists().then(() => {
+                setOpen(false);
+            });  
+        });
     };
-
-    console.log('currentList=' + store.currentList)
+    
+    /* Handles closing the full-screen dialog and publishing list when user clicks "publish". */
+    const handlePublish = () => {
+        store.currentList.isPublished = true;
+        store.updateCurrentList().then(() => {
+            store.loadLists().then(() => {
+                setOpen(false);
+            });
+        });
+    };
 
     function handleUpdateText(event) {
         let text = event.target.value;
         let id = event.target.id.substring("list-".length) - 1;
-        console.log(id);
         store.currentList.items[id] = text;
+    }
+
+    function handleUpdateListName(event) {
+        let text = event.target.value;
+        store.currentList.name = text;
     }
 
     let i = 0  // used for mapping the items
@@ -55,21 +68,13 @@ function Statusbar() {
       >
         <AppBar sx={{ position: 'relative' }}>
           <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={handleClose}
-              aria-label="close"
-            >
-            <CloseIcon />
-            </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Workspace
             </Typography>
             <Button autoFocus color="inherit" onClick={handleClose}>
               save
             </Button>
-            <Button autoFocus color="inherit" onClick={handleClose}>
+            <Button autoFocus color="inherit" onClick={handlePublish}>
               publish
             </Button>
           </Toolbar>
@@ -81,6 +86,7 @@ function Statusbar() {
             label="List Name"
             margin="dense" 
             sx={{ paddingLeft: 1, paddingRight: 120, mb: 1 }}
+            onChange={handleUpdateListName}
         ></TextField>
         <Grid direction="column"> 
         {
