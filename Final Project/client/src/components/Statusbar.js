@@ -15,6 +15,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 function Statusbar() {
     const { store } = useContext(GlobalStoreContext);
+    
     /* Handles opening the full-screen dialog. */
     const handleClickOpen = () => {
         store.createNewList();

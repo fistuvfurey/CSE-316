@@ -8,6 +8,8 @@ import SplashScreen from './SplashScreen'
 import Statusbar from './Statusbar'
 import DeleteModal from './DeleteModal'
 import ListCardButtons from './ListCardButtons'
+import ListItemsCard from './ListItemsCard'
+import CommentCard from './CommentCard'
 /*
     This serves as a module so that we can import
     all the other components as we wish.
@@ -24,4 +26,6 @@ export {
     SplashScreen,
     Statusbar, 
     DeleteModal,
-    ListCardButtons }
+    ListCardButtons,
+    ListItemsCard,
+    CommentCard }

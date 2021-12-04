@@ -22,6 +22,7 @@ function AuthContextProvider(props) {
         isFailure: false, 
         errMessage: null
     });
+    
     const history = useHistory();
 
     useEffect(() => {
