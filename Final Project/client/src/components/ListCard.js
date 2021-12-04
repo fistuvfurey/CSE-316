@@ -23,6 +23,10 @@ function ListCard(props) {
         store.setCurrentList(list._id);
     }
 
+    const handleAccordionOpen = () => {
+        store.incrementListViews(list);
+    }
+
     function handleKeyPress(event) {
         if (event.code === "Enter") {
             let comment = event.target.value;
@@ -35,7 +39,11 @@ function ListCard(props) {
     if (list.isPublished) {
         cardElement = 
         <Card sx={{ mb: 1 }}>
-            <Accordion>
+            <Accordion onChange={(e, expanded) => {
+                if (expanded) {
+                    handleAccordionOpen();
+                }
+            }}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <CardContent>
                         <Grid direction="column">
@@ -47,7 +55,7 @@ function ListCard(props) {
                     <Box sx={{ flexGrow: 1 }}></Box>
                     <Stack>
                         <ListCardButtons list={list}></ListCardButtons>
-                        <Typography sx={{ paddingLeft: 14 }}>Views: 20</Typography>
+                        <Typography sx={{ paddingLeft: 14 }}>Views: {list.numViews}</Typography>
                     </Stack>
                 </AccordionSummary>
                 <AccordionDetails>
@@ -85,7 +93,7 @@ function ListCard(props) {
                     <Stack direction="row">
                         <Button onClick={handleEditClick}>Edit</Button>
                         <Box flex={8}></Box>
-                        <Typography sx={{ flex: 1 }}>Views: 20</Typography> 
+                        <Typography sx={{ flex: 1 }}>Views: {list.numViews}</Typography> 
                     </Stack>
                 </Grid>
             </CardContent>

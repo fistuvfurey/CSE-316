@@ -204,7 +204,22 @@ function GlobalStoreContextProvider(props) {
             storeReducer({
                 type: GlobalStoreActionType.LOAD_LISTS,
                 payload: listsArray
-            })
+            });
+        } catch (err) {
+            console.log(err.response.data.errorMessage);
+        }
+    }
+
+    store.incrementListViews = async function (list) {
+        try {
+            list.numViews = list.numViews + 1;
+            const updateListResponse = await api.updateTop5ListById(list._id, list);
+            const loadListsResponse = await api.getLists();
+            let listsArray = loadListsResponse.data.lists;
+            storeReducer({
+                type: GlobalStoreActionType.LOAD_LISTS,
+                payload: listsArray
+            });
         } catch (err) {
             console.log(err.response.data.errorMessage);
         }
