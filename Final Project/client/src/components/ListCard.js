@@ -36,7 +36,7 @@ function ListCard(props) {
                         </Box>
                     </CardContent>
                     <Box sx={{ flexGrow: 1 }}></Box>
-                    <ListCardButtons></ListCardButtons>
+                    <ListCardButtons list={list}></ListCardButtons>
                 </AccordionSummary>
             </Accordion>
         </Card>
