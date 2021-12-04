@@ -4,6 +4,7 @@ import ListCard from './ListCard.js'
 import List from '@mui/material/List';
 import DeleteModal from './DeleteModal';
 import NavBar from './NavBar';
+
 /*
     This React component lists all the top5 lists in the UI.
     

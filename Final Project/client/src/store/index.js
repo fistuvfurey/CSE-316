@@ -18,8 +18,7 @@ export const GlobalStoreActionType = {
     LOAD_LISTS: "LOAD_LISTS",
     MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
     UNMARK_LIST_FOR_DELETION: "UNMARK_LIST_FOR_DELETION",
-    SET_CURRENT_LIST: "SET_CURRENT_LIST",
-    UPDATE_LIST: "UPDATE_LIST"
+    SET_CURRENT_LIST: "SET_CURRENT_LIST"
 }
 
 // WITH THIS WE'RE MAKING OUR GLOBAL DATA STORE
@@ -41,7 +40,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.CREATE_NEW_LIST: {
                 return setStore({
                     lists: store.lists,
-                    currentList: payload.currentList,
+                    currentList: payload,
                     newListCounter: store.newListCounter + 1,
                     listMarkedForDeletion: null
                 });
@@ -78,14 +77,6 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null
                 });
             }
-            case GlobalStoreActionType.UPDATE_LIST: {
-                return setStore({
-                    lists: store.lists,
-                    currentList: store.currentList,
-                    newListCounter: store.newListCounter,
-                    listMarkedForDeletion: null
-                })
-            }
             default:
                 return store;
         }
@@ -93,14 +84,14 @@ function GlobalStoreContextProvider(props) {
 
     store.createNewList = async function () {
         let newListName = "Untitled" + store.newListCounter;
-        console.log(auth.user.firstName);
+        console.log(auth.user);
         let payload = {
             name: newListName,
             items: ["?", "?", "?", "?", "?"],
             ownerEmail: auth.user.email,
             ownerUsername: auth.user.username,
-            numLikes: 0,
-            numDislikes: 0,
+            likes: [],
+            dislikes: [],
             numViews: 0,
             isPublished: false,
             comments: []
@@ -111,16 +102,14 @@ function GlobalStoreContextProvider(props) {
                 let newList = createListResponse.data.top5List;
                 storeReducer({
                     type: GlobalStoreActionType.CREATE_NEW_LIST,
-                    payload: {
-                        currentList: newList
-                    }
+                    payload: newList
                 }); 
             }
             else {
                 console.log("API FAILED TO CREATE A NEW LIST");
             }
         } catch (err) {
-            console.log("oh no error");
+            console.log(err.response.data.errorMessage);
         }
     }
 
@@ -207,27 +196,15 @@ function GlobalStoreContextProvider(props) {
         }
     }
 
-    store.updateCurrentList = async function () {
-        try {
-            const response = await api.updateTop5ListById(store.currentList._id, store.currentList);
-            if (response.data.success) {
-                storeReducer({
-                    type: GlobalStoreActionType.SET_CURRENT_LIST,
-                    payload: store.currentList
-                });
-            }
-        } catch (err) {
-            console.log(err.response.data.errorMessage);
-        }
-    }
-
     store.updateList = async function (list) {
         try {
-            const response = await api.updateTop5ListById(list._id, list);
+            const updateListResponse = await api.updateTop5ListById(list._id, list);
+            const loadListsResponse = await api.getLists();
+            let listsArray = loadListsResponse.data.lists;
             storeReducer({
-                type: GlobalStoreActionType.UPDATE_LIST,
-                payload: null
-            });
+                type: GlobalStoreActionType.LOAD_LISTS,
+                payload: listsArray
+            })
         } catch (err) {
             console.log(err.response.data.errorMessage);
         }

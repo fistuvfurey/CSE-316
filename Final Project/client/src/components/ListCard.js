@@ -30,20 +30,25 @@ function ListCard(props) {
             store.updateList(list);
         }
     }
-
-    return (
+    
+    let cardElement;
+    if (list.isPublished) {
+        cardElement = 
         <Card sx={{ mb: 1 }}>
             <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <CardContent>
-                        <Box sx={{ flexGrow: 1 }}>
+                        <Grid direction="column">
                             <Typography>{list.name}</Typography>
                             <Typography>By {list.ownerUsername}</Typography>
                             <Button onClick={handleEditClick}>Edit</Button>
-                        </Box>
+                        </Grid>
                     </CardContent>
                     <Box sx={{ flexGrow: 1 }}></Box>
-                    <ListCardButtons list={list}></ListCardButtons>
+                    <Stack>
+                        <ListCardButtons list={list}></ListCardButtons>
+                        <Typography sx={{ paddingLeft: 14 }}>Views: 20</Typography>
+                    </Stack>
                 </AccordionSummary>
                 <AccordionDetails>
                     <Grid container direction='row'>
@@ -61,6 +66,32 @@ function ListCard(props) {
                 </AccordionDetails>
             </Accordion>
         </Card>
+    }
+    else {
+        cardElement = 
+        <Card sx={{ mb: 1 }}>
+            <CardContent>
+                <Grid direction="column">
+                    <Stack direction="row">
+                        <Typography>{list.name}</Typography>   
+                    </Stack>
+                    <Stack direction="row">
+                        <Typography>By {list.ownerUsername}</Typography>
+                        <Box sx={{ paddingLeft: 134 }}>
+                            <ListCardButtons list={list}></ListCardButtons>
+                        </Box>
+                    </Stack>
+                    <Stack direction="row">
+                        <Button onClick={handleEditClick}>Edit</Button>
+                        <Typography sx={{ paddingLeft: 150}}>Views: 20</Typography> 
+                    </Stack>
+                </Grid>
+            </CardContent>
+        </Card>
+    }
+
+    return (
+        cardElement
     )
 }
 

@@ -23,17 +23,13 @@ function Statusbar() {
 
     /* Handles closing the full-screen dialog when user clicks "save". */
     const handleClose = () => {
-        store.updateCurrentList().then(() => {
-            store.loadLists(); 
-        });
+        store.updateList(store.currentList);
     };
     
     /* Handles closing the full-screen dialog and publishing list when user clicks "publish". */
     const handlePublish = () => {
         store.currentList.isPublished = true;
-        store.updateCurrentList().then(() => {
-            store.loadLists();
-        });
+        store.updateList(store.currentList);
     };
 
     function handleUpdateText(event) {

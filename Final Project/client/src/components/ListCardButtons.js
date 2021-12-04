@@ -22,22 +22,21 @@ function ListCardButtons(props) {
     }
         
     return (
-        <Box>
-            <IconButton>
-                <ThumbUpOffAltIcon style={{ fontSize: '24pt' }}></ThumbUpOffAltIcon>
-                <Typography>80M</Typography>
-            </IconButton>
-            <IconButton>
-                <ThumbDownOffAlt style={{ fontSize: '24pt' }}></ThumbDownOffAlt>
-                <Typography>40</Typography>
-            </IconButton>
-            <IconButton onClick={(event) => {
-                handleDeleteList(event, list._id)
-            }} aria-label='delete'>
-                <DeleteIcon style={{ fontSize: '24pt' }}></DeleteIcon>
-            </IconButton>
-            <Typography>Views: 20</Typography>      
-        </Box>
+        <div>
+        <IconButton>
+            <ThumbUpOffAltIcon style={{ fontSize: '24pt' }}></ThumbUpOffAltIcon>
+            <Typography>80M</Typography>
+        </IconButton>
+        <IconButton>
+            <ThumbDownOffAlt style={{ fontSize: '24pt' }}></ThumbDownOffAlt>
+            <Typography>40</Typography>
+        </IconButton>
+        <IconButton onClick={(event) => {
+            handleDeleteList(event, list._id)
+        }} aria-label='delete'>
+            <DeleteIcon style={{ fontSize: '24pt' }}></DeleteIcon>
+        </IconButton>  
+        </div>   
     )
 }
 
