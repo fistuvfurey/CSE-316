@@ -97,7 +97,6 @@ body {
 #top5-list-selector {
   position: absolute;
   left: 0%;
-  top: 10%;
   width: 100%;
   height: 80%;
   background-color: var(--swatch-primary);
@@ -118,7 +117,7 @@ body {
   top: 90%;
   width: 100%;
   height: 10%;
-  background-color: rgb(82, 114, 218);
+  background-color: var(--swatch-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -150,7 +149,7 @@ body {
   height: 90%;
   display: flex;
   flex-direction: column;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .list-card,

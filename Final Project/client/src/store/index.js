@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import api from '../api'
+import api, { getLists } from '../api'
 import AuthContext from '../auth'
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -16,14 +16,10 @@ export const GlobalStoreContext = createContext({});
 // DATA STORE STATE THAT CAN BE PROCESSED
 export const GlobalStoreActionType = {
     CHANGE_LIST_NAME: "CHANGE_LIST_NAME",
-    CLOSE_CURRENT_LIST: "CLOSE_CURRENT_LIST",
     CREATE_NEW_LIST: "CREATE_NEW_LIST",
     LOAD_LISTS: "LOAD_LISTS",
     MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
     UNMARK_LIST_FOR_DELETION: "UNMARK_LIST_FOR_DELETION",
-    SET_CURRENT_LIST: "SET_CURRENT_LIST",
-    SET_ITEM_EDIT_ACTIVE: "SET_ITEM_EDIT_ACTIVE",
-    SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE"
 }
 
 // WITH THIS WE'RE MAKING OUR GLOBAL DATA STORE
@@ -32,10 +28,7 @@ function GlobalStoreContextProvider(props) {
     // THESE ARE ALL THE THINGS OUR DATA STORE WILL MANAGE
     const [store, setStore] = useState({
         lists: [],
-        currentList: null,
         newListCounter: 0,
-        isListNameEditActive: false,
-        isItemEditActive: false,
         listMarkedForDeletion: null
     });
     const history = useHistory();
@@ -52,32 +45,15 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.CHANGE_LIST_NAME: {
                 return setStore({
                     lists: payload.lists,
-                    currentList: payload.top5List,
                     newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
                     listMarkedForDeletion: null
                 });
-            }
-            // STOP EDITING THE CURRENT LIST
-            case GlobalStoreActionType.CLOSE_CURRENT_LIST: {
-                return setStore({
-                    lists: store.lists,
-                    currentList: null,
-                    newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
-                    listMarkedForDeletion: null
-                })
             }
             // CREATE A NEW LIST
             case GlobalStoreActionType.CREATE_NEW_LIST: {
                 return setStore({
-                    lists: store.lists,
-                    currentList: payload,
+                    lists: payload,
                     newListCounter: store.newListCounter + 1,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
                     listMarkedForDeletion: null
                 })
             }
@@ -85,10 +61,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.LOAD_LISTS: {
                 return setStore({
                     lists: payload,
-                    currentList: null,
                     newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
                     listMarkedForDeletion: null
                 });
             }
@@ -96,10 +69,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.MARK_LIST_FOR_DELETION: {
                 return setStore({
                     lists: store.lists,
-                    currentList: null,
                     newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
                     listMarkedForDeletion: payload
                 });
             }
@@ -107,43 +77,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.UNMARK_LIST_FOR_DELETION: {
                 return setStore({
                     lists: store.lists,
-                    currentList: null,
                     newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
-                    listMarkedForDeletion: null
-                });
-            }
-            // UPDATE A LIST
-            case GlobalStoreActionType.SET_CURRENT_LIST: {
-                return setStore({
-                    lists: store.lists,
-                    currentList: payload,
-                    newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
-                    listMarkedForDeletion: null
-                });
-            }
-            // START EDITING A LIST ITEM
-            case GlobalStoreActionType.SET_ITEM_EDIT_ACTIVE: {
-                return setStore({
-                    lists: store.lists,
-                    currentList: store.currentList,
-                    newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: true,
-                    listMarkedForDeletion: null
-                });
-            }
-            // START EDITING A LIST NAME
-            case GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE: {
-                return setStore({
-                    lists: store.lists,
-                    currentList: payload,
-                    newListCounter: store.newListCounter,
-                    isListNameEditActive: true,
-                    isItemEditActive: false,
                     listMarkedForDeletion: null
                 });
             }
@@ -203,29 +137,39 @@ function GlobalStoreContextProvider(props) {
     // THIS FUNCTION CREATES A NEW LIST
     store.createNewList = async function () {
         let newListName = "Untitled" + store.newListCounter;
+        console.log(auth.user.firstName);
         let payload = {
             name: newListName,
             items: ["?", "?", "?", "?", "?"],
-            ownerEmail: auth.user.email
+            ownerEmail: auth.user.email,
+            ownerFirstName: auth.user.firstName,
+            ownerLastName: auth.user.lastName,
+            numLikes: 0,
+            numDislikes: 0,
+            numViews: 0,
+            isPublished: false,
+            comments: []
         };
         try {
-            const response = await api.createTop5List(payload);
-            if (response.data.success) {
-                let newList = response.data.top5List;
-                storeReducer({
-                    type: GlobalStoreActionType.CREATE_NEW_LIST,
-                    payload: newList
-                }
-                );
-
-                // IF IT'S A VALID LIST THEN LET'S START EDITING IT
-                history.push("/top5list/" + newList._id);
+            const createListResponse = await api.createTop5List(payload);
+            if (createListResponse.data.success) {
+                const getListsResponse = await api.getLists();
+                if (getListsResponse.data.success) {
+                    let lists = getListsResponse.data.lists;
+                    storeReducer({
+                        type: GlobalStoreActionType.CREATE_NEW_LIST,
+                        payload: lists
+                    });
+                } 
+                else {
+                    console.log("API FAILED TO GET LISTS");
+                }  
             }
             else {
                 console.log("API FAILED TO CREATE A NEW LIST");
             }
         } catch (err) {
-            console.log(err.response.data.errorMessage);
+            console.log("oh no error");
         }
     }
 

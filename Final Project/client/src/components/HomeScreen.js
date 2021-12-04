@@ -1,8 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { GlobalStoreContext } from '../store'
 import ListCard from './ListCard.js'
-import { Fab, Typography } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add';
 import List from '@mui/material/List';
 import DeleteModal from './DeleteModal';
 import NavBar from './NavBar';
@@ -18,13 +16,10 @@ const HomeScreen = () => {
         store.loadLists();
     }, []);
 
-    function handleCreateNewList() {
-        store.createNewList();
-    }
     let listCard = "";
     if (store) {
         listCard = 
-            <List sx={{ width: '90%', left: '5%', bgcolor: 'background.paper' }}>
+            <List sx={{ width: '90%', left: '5%' }}>
             {
                 store.lists.map((list) => (
                     <ListCard
@@ -41,7 +36,7 @@ const HomeScreen = () => {
             </List>;
     }
     return (
-        <div>
+        <div id="top5-list-selector">
             <NavBar></NavBar>
             <div id="list-selector-list">
                 {

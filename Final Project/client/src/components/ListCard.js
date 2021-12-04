@@ -25,16 +25,15 @@ function ListCard(props) {
     }
         
     return (
-        <Card>
+        <Card sx={{ mb: 1 }}>
             <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <CardContent>
                         <Box sx={{ flexGrow: 1}}>
                             <Typography>{list.name}</Typography>
-                            <Typography>By: user name</Typography>
+                            <Typography>By { list.ownerFirstName } { list.ownerLastName }</Typography>
                             <Typography>Edit</Typography>
                         </Box>
-
                     </CardContent>
                     <Box sx={{ flexGrow: 1 }}></Box>
                     <ListCardButtons></ListCardButtons>

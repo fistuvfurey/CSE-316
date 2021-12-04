@@ -11,6 +11,8 @@ import PeopleIcon from '@mui/icons-material/People';
 import PersonIcon from '@mui/icons-material/Person';
 import FunctionsIcon from '@mui/icons-material/Functions';
 import SortIcon from '@mui/icons-material/Sort';
+import { TextField } from '@mui/material';
+import InputAdornment from '@mui/material/InputAdornment';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -72,7 +74,7 @@ function handleCommunityListsButton(event, id) {
 
 export default function NavBar() {
   return (
-    <Box sx={{ flexGrow: 1}}>
+    <Box >
       <AppBar position="static" sx={{ boxShadow: 0 }}>
         <Toolbar>
         <IconButton color="inherit" aria-label="your lists" component="span">
@@ -87,20 +89,16 @@ export default function NavBar() {
         <IconButton color="inherit" aria-label="community lists" component="span">
           <FunctionsIcon fontSize="large"/>
         </IconButton>
-        <Box>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-            </Search>
-        </Box>
-        <Box sx={{ flexGrow: 1 }}> </Box>
+          <TextField sx={{ flex: 1, backgroundColor: "#FFFFFF", borderRadius: 2 }} size="small"
+            InputProps={{
+              startAdornment: (
+                  <InputAdornment position='start'>
+                      <SearchIcon />
+                  </InputAdornment>)
+                }}>
+          </TextField>
           <Box>
-            <Typography align="right">SORT BY</Typography>
+            <Typography sx={{ paddingLeft: 2 }}>SORT BY</Typography>
           </Box>
             <IconButton color="inherit" aria-label="sort by" component="span">
                 <SortIcon fontSize="large"/>
