@@ -211,6 +211,7 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.incrementListViews = async function (list) {
+        console.log("increment");
         try {
             list.numViews = list.numViews + 1;
             const updateListResponse = await api.updateTop5ListById(list._id, list);
@@ -223,6 +224,32 @@ function GlobalStoreContextProvider(props) {
         } catch (err) {
             console.log(err.response.data.errorMessage);
         }
+    }
+
+    store.likeButton= async function (list) {
+            console.log("like button")
+    //     if (list.likes.includes(auth.user.username)) {
+    //         // unlike the list
+    //         list.likes = list.likes.filter(username => username !== auth.user.username);  // remove username from list of likes
+    //     } 
+    //     // like the list
+    //     else {
+    //         list.likes.push(auth.user.username);  // add username to list of likes
+    //     }
+    //    // store.updateList(list);
+    }
+
+    store.dislikeButton = async function (list) {
+        console.log("dislike button")
+        // if (list.dislikes.includes(auth.user.username)) {
+        //     // undislike the list
+        //     list.dislikes = list.dislikes.filter(username => username !== auth.user.username);  // remove username from list of dislikes
+        // }
+        // // dislike the list
+        // else {
+        //     list.dislikes.push(auth.user.username)
+        // }
+        // //store.updateList(list);
     }
 
     return (

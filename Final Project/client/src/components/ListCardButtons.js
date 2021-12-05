@@ -20,16 +20,24 @@ function ListCardButtons(props) {
         event.stopPropagation();
         store.markListForDeletion(id);
     }
+
+    async function handleClickLikeButton() {
+        store.likeButton(list);
+    }
+
+    async function handleClickDislikeButton() {
+        store.dislikeButton(list);
+    }
         
     return (
         <div>
-        <IconButton>
+        <IconButton onClick={handleClickLikeButton()}>
             <ThumbUpOffAltIcon style={{ fontSize: '24pt' }}></ThumbUpOffAltIcon>
-            <Typography>80M</Typography>
+            <Typography>{list.likes.length}</Typography>
         </IconButton>
-        <IconButton>
+        <IconButton onClick={handleClickDislikeButton()}>
             <ThumbDownOffAlt style={{ fontSize: '24pt' }}></ThumbDownOffAlt>
-            <Typography>40</Typography>
+            <Typography>{list.dislikes.length}</Typography>
         </IconButton>
         <IconButton onClick={(event) => {
             handleDeleteList(event, list._id)

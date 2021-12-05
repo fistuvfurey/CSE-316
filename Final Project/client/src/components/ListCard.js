@@ -14,16 +14,11 @@ function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const { list } = props;
 
-    async function handleDeleteList(event, id) {
-        event.stopPropagation();
-        store.markListForDeletion(id);
-    }
-
     const handleEditClick = () => {
         store.setCurrentList(list._id);
     }
 
-    const handleAccordionOpen = () => {
+    async function handleAccordionOpen() {
         store.incrementListViews(list);
     }
 
