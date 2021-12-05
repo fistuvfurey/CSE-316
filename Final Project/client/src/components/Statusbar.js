@@ -1,6 +1,6 @@
-import { useContext, forwardRef } from 'react'
+import { useContext } from 'react'
 import { GlobalStoreContext } from '../store'
-import { Typography, Button, Dialog, Fab, AppBar, Toolbar, Slide, TextField, Card, Stack, Grid } from '@mui/material'
+import { Typography, Button, Dialog, Fab, AppBar, Toolbar, TextField, Card, Stack, Grid } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
 
 /*
@@ -8,10 +8,6 @@ import AddIcon from '@mui/icons-material/Add';
     
     @author Aidan Furey
 */
-
-const Transition = forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
 
 function Statusbar() {
     const { store } = useContext(GlobalStoreContext);
@@ -53,7 +49,6 @@ function Statusbar() {
         fullScreen
         open={store.currentList}
         onClose={handleClose}
-        TransitionComponent={Transition}
       >
         <AppBar sx={{ position: 'relative' }}>
           <Toolbar>

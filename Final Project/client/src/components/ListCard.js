@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { GlobalStoreContext } from '../store';
+import AuthContext from '../auth';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box } from '@mui/system';
 import { Grid, Button, Typography, Accordion, CardContent, Card, AccordionSummary, AccordionDetails, Stack, TextField } from '@mui/material';
@@ -13,6 +14,7 @@ import { ListCardButtons, ListItemsCard, CommentCard } from '.';
 function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const { list } = props;
+    const { auth } = useContext(AuthContext);
 
     const handleEditClick = () => {
         store.setCurrentList(list._id);
@@ -24,7 +26,7 @@ function ListCard(props) {
 
     function handleKeyPress(event) {
         if (event.code === "Enter") {
-            let comment = event.target.value;
+            let comment = { username: auth.user.username, comment: event.target.value }
             list.comments.push(comment);
             store.updateList(list);
         }

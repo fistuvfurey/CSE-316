@@ -1,4 +1,3 @@
-import { Box } from '@mui/system';
 import { useContext } from 'react';
 import { GlobalStoreContext } from '../store';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
@@ -32,12 +31,14 @@ function ListCardButtons(props) {
     return (
         <div>
         <IconButton onClick={(event) => {
+            event.stopPropagation();
             handleClickLikeButton();
         }}>
             <ThumbUpOffAltIcon style={{ fontSize: '24pt' }}></ThumbUpOffAltIcon>
             <Typography>{list.likes.length}</Typography>
         </IconButton>
         <IconButton onClick={(event) => {
+            event.stopPropagation();
             handleClickDislikeButton();
         }}>
             <ThumbDownOffAlt style={{ fontSize: '24pt' }}></ThumbDownOffAlt>

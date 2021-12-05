@@ -22,7 +22,7 @@ const HomeScreen = () => {
         listCard = 
             <List sx={{ width: '90%', left: '5%' }}>
             {
-                store.lists.map((list) => (
+                store.lists && store.lists.map((list) => (
                     <ListCard
                         key={list._id}
                         list={list}

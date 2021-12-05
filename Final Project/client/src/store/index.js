@@ -132,6 +132,19 @@ function GlobalStoreContextProvider(props) {
         }
     }
 
+    store.loadAllLists = async function () {
+        try {
+            const response = await api.getAllTop5Lists();
+            let listsArray = response.data.data;
+            storeReducer({
+                type: GlobalStoreActionType.LOAD_LISTS,
+                payload: listsArray
+            });
+        } catch (err) {
+            console.log(err.response.data.errorMessage);
+        }
+    }
+
     store.markListForDeletion = async function (id) {
         // GET THE LIST
         try {
