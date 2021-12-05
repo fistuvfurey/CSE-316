@@ -18,7 +18,9 @@ export const GlobalStoreActionType = {
     LOAD_LISTS: "LOAD_LISTS",
     MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
     UNMARK_LIST_FOR_DELETION: "UNMARK_LIST_FOR_DELETION",
-    SET_CURRENT_LIST: "SET_CURRENT_LIST"
+    SET_CURRENT_LIST: "SET_CURRENT_LIST",
+    LOAD_ALL_LISTS: "LOAD_ALL_LISTS",
+    SET_BUTTON: "SET_BUTTON"
 }
 
 // WITH THIS WE'RE MAKING OUR GLOBAL DATA STORE
@@ -28,7 +30,9 @@ function GlobalStoreContextProvider(props) {
         lists: [],
         currentList: null,
         newListCounter: 0,
-        listMarkedForDeletion: null
+        listMarkedForDeletion: null,
+        isHome: true,
+        isAllLists: false
     });
     
     // SINCE WE'VE WRAPPED THE STORE IN THE AUTH CONTEXT WE CAN ACCESS THE USER HERE
@@ -42,7 +46,9 @@ function GlobalStoreContextProvider(props) {
                     lists: store.lists,
                     currentList: payload,
                     newListCounter: store.newListCounter + 1,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    isHome: store.isHome,
+                    isAllLists: store.isAllLists
                 });
             }
             case GlobalStoreActionType.LOAD_LISTS: {
@@ -58,7 +64,9 @@ function GlobalStoreContextProvider(props) {
                     lists: store.lists,
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
-                    listMarkedForDeletion: payload
+                    listMarkedForDeletion: payload,
+                    isHome: store.isHome,
+                    isAllLists: store.isAllLists
                 });
             }
             case GlobalStoreActionType.UNMARK_LIST_FOR_DELETION: {
@@ -66,7 +74,9 @@ function GlobalStoreContextProvider(props) {
                     lists: store.lists,
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    isHome: store.isHome,
+                    isAllLists: store.isAllLists
                 });
             }
             case GlobalStoreActionType.SET_CURRENT_LIST: {
@@ -74,8 +84,20 @@ function GlobalStoreContextProvider(props) {
                     lists: store.lists,
                     currentList: payload,
                     newListCounter: store.newListCounter,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    isHome: store.isHome,
+                    isAllLists: store.isAllLists
                 });
+            }
+            case GlobalStoreActionType.SET_BUTTON: {
+                return setStore({
+                    lists: store.lists,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    listMarkedForDeletion: null,
+                    isHome: payload.isHome,
+                    isAllLists: payload.isAllLists
+                })
             }
             default:
                 return store;
@@ -135,7 +157,7 @@ function GlobalStoreContextProvider(props) {
     store.loadAllLists = async function () {
         try {
             const response = await api.getAllTop5Lists();
-            let listsArray = response.data.data;
+            let listsArray = response.data.lists;
             storeReducer({
                 type: GlobalStoreActionType.LOAD_LISTS,
                 payload: listsArray
@@ -212,7 +234,13 @@ function GlobalStoreContextProvider(props) {
     store.updateList = async function (list) {
         try {
             const updateListResponse = await api.updateTop5ListById(list._id, list);
-            const loadListsResponse = await api.getLists();
+            let loadListsResponse;
+            if (store.isHome) {
+                loadListsResponse = await api.getLists();
+            } 
+            else {
+                loadListsResponse = await api.getAllTop5Lists();
+            }
             let listsArray = loadListsResponse.data.lists;
             storeReducer({
                 type: GlobalStoreActionType.LOAD_LISTS,
@@ -250,6 +278,16 @@ function GlobalStoreContextProvider(props) {
             list.dislikes.push(auth.user.username)
         }
         store.updateList(list);
+    }
+
+    store.setButton = function (isHome, isAllLists) {
+        storeReducer({
+            type: GlobalStoreActionType.SET_BUTTON,
+            payload: {
+                isHome: isHome,
+                isAllLists: isAllLists
+            }
+        });
     }
 
     return (

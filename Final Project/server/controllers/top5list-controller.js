@@ -42,8 +42,6 @@ updateTop5List = async (req, res) => {
             error: 'You must provide a body to update',
         })
     }
-    let decodedToken = jwt.decode(req.cookies.token);
-    let email = decodedToken.user.email;
     Top5List.findOne({ _id: req.params.id }, (err, top5List) => {
         console.log("top5List found: " + JSON.stringify(top5List));
         if (err) {
@@ -51,9 +49,6 @@ updateTop5List = async (req, res) => {
                 err,
                 message: 'Top 5 List not found!',
             })
-        }
-        if (top5List.ownerEmail != email) {
-            return res.status(400).json({ success: false, error: `Invalid user`})
         }
 
         top5List.name = body.name
@@ -116,17 +111,18 @@ getTop5ListById = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
+/* Gets all lists that have been published. */
 getTop5Lists = async (req, res) => {
-    await Top5List.find({}, (err, top5Lists) => {
+    await Top5List.find({ isPublished: true }, (err, lists) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
-        if (!top5Lists.length) {
+        if (!lists.length) {
             return res
                 .status(404)
                 .json({ success: false, error: `Top 5 Lists not found` })
         }
-        return res.status(200).json({ success: true, data: top5Lists })
+        return res.status(200).json({ success: true, lists: lists })
     }).catch(err => console.log(err))
 }
 

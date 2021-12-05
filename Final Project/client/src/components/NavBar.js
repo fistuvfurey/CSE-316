@@ -14,9 +14,12 @@ export default function NavBar() {
   const { store } = useContext(GlobalStoreContext);
 
   const handleHomeButton = () => {
+    store.setButton(true, false);
+    store.loadLists();
   }
   
   const handleAllListsButton = () => {
+    store.setButton(false, true);
     store.loadAllLists();
   }
   
@@ -30,7 +33,7 @@ export default function NavBar() {
     <Box >
       <AppBar position="static" sx={{ boxShadow: 0 }}>
         <Toolbar>
-        <IconButton color="inherit" aria-label="your lists" component="span">
+        <IconButton color="inherit" aria-label="your lists" component="span" onClick={handleHomeButton}>
             <HomeIcon fontSize="large"/>
         </IconButton>
         <IconButton color="inherit" aria-label="all lists" component="span" onClick={handleAllListsButton}>
