@@ -21,18 +21,19 @@ getLoggedIn = async (req, res) => {
 
 login = async (req, res) => {
     try { 
-        const { email, password } = req.body;
-        if (!email || !password) {
+        const { username, password } = req.body;
+        if (!username || !password) {
             return res
                 .status(400)
                 .json({ errorMessage: "Please enter all required fields." });
         }
 
-        const user = await User.findOne({ email: email });
+        const user = await User.findOne({ username: username });
+        console.log("USERNAME:", user);
         if (!user) {
             return res
                 .status(400)
-                .json({ errorMessage: "Wrong email or password." });
+                .json({ errorMessage: "Wrong username or password." });
         }
 
         const passwordCorrect = await bcrypt.compare(password, user.passwordHash);
@@ -40,7 +41,7 @@ login = async (req, res) => {
             return res
                 .status(400)
                 .json({
-                    errorMessage: "Wrong email or password."
+                    errorMessage: "Wrong username or password."
                 })
         }
 

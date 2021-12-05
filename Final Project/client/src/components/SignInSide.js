@@ -9,8 +9,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
@@ -30,7 +28,7 @@ export default function SignInSide() {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     auth.login({
-        email: formData.get('email'),
+        username: formData.get('username'),
         password: formData.get('password'),
     }, store);
   };
@@ -94,10 +92,10 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
+                id="username"
+                label="username"
+                name="username"
+                autoComplete="username"
                 autoFocus />
               <TextField
                 margin="normal"
