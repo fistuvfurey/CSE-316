@@ -110,7 +110,7 @@ function AuthContextProvider(props) {
                 }
             });
             history.push("/");
-            store.loadLists();
+            store.loadHome();
         } catch (err) {
             let errMessage = err.response.data.errorMessage;
             console.log(errMessage);
@@ -128,7 +128,7 @@ function AuthContextProvider(props) {
                 }
             });
             history.push("/");
-            store.loadLists();
+            store.loadHome();
         } catch (err) {
             let errMessage = err.response.data.errorMessage;
             console.log(errMessage);

@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { GlobalStoreContext } from '../store';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import { IconButton, Typography } from '@mui/material';
@@ -27,29 +27,59 @@ function ListCardButtons(props) {
     async function handleClickDislikeButton() {
         store.dislikeButton(list);
     }
+
+    let isDeleteIcon = true;
+    if (store.isAllLists) {
+        isDeleteIcon = !isDeleteIcon;
+    }
+
+    let buttons;
+    if (isDeleteIcon) {
+        buttons = 
+            <div>
+                <IconButton onClick={(event) => {
+                    event.stopPropagation();
+                    handleClickLikeButton();
+                }}>
+                    <ThumbUpOffAltIcon style={{ fontSize: '24pt' }}></ThumbUpOffAltIcon>
+                    <Typography>{list.likes.length}</Typography>
+                </IconButton>
+                <IconButton onClick={(event) => {
+                    event.stopPropagation();
+                    handleClickDislikeButton();
+                }}>
+                <ThumbDownOffAlt style={{ fontSize: '24pt' }}></ThumbDownOffAlt>
+                <Typography>{list.dislikes.length}</Typography>
+                </IconButton>
+                    <IconButton onClick={(event) => {
+                            handleDeleteList(event, list._id);
+                        }} aria-label='delete'>
+                        <DeleteIcon style={{ fontSize: '24pt' }}></DeleteIcon>
+                    </IconButton>
+            </div> 
+    }
+    else {
+        buttons = 
+            <div>
+                <IconButton onClick={(event) => {
+                    event.stopPropagation();
+                    handleClickLikeButton();
+                }}>
+                    <ThumbUpOffAltIcon style={{ fontSize: '24pt' }}></ThumbUpOffAltIcon>
+                    <Typography>{list.likes.length}</Typography>
+                </IconButton>
+                <IconButton onClick={(event) => {
+                    event.stopPropagation();
+                    handleClickDislikeButton();
+                }}>
+                <ThumbDownOffAlt style={{ fontSize: '24pt' }}></ThumbDownOffAlt>
+                <Typography>{list.dislikes.length}</Typography>
+                </IconButton>
+            </div> 
+    }
         
     return (
-        <div>
-        <IconButton onClick={(event) => {
-            event.stopPropagation();
-            handleClickLikeButton();
-        }}>
-            <ThumbUpOffAltIcon style={{ fontSize: '24pt' }}></ThumbUpOffAltIcon>
-            <Typography>{list.likes.length}</Typography>
-        </IconButton>
-        <IconButton onClick={(event) => {
-            event.stopPropagation();
-            handleClickDislikeButton();
-        }}>
-            <ThumbDownOffAlt style={{ fontSize: '24pt' }}></ThumbDownOffAlt>
-            <Typography>{list.dislikes.length}</Typography>
-        </IconButton>
-        <IconButton onClick={(event) => {
-            handleDeleteList(event, list._id);
-        }} aria-label='delete'>
-            <DeleteIcon style={{ fontSize: '24pt' }}></DeleteIcon>
-        </IconButton>  
-        </div>   
+          buttons
     )
 }
 

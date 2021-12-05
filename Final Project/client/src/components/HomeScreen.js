@@ -14,7 +14,7 @@ const HomeScreen = () => {
     const { store } = useContext(GlobalStoreContext);
 
     useEffect(() => {
-        store.loadLists();
+        store.loadHome();
     }, []);
 
     let listCard = "";

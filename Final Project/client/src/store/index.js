@@ -20,7 +20,7 @@ export const GlobalStoreActionType = {
     UNMARK_LIST_FOR_DELETION: "UNMARK_LIST_FOR_DELETION",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     LOAD_ALL_LISTS: "LOAD_ALL_LISTS",
-    SET_BUTTON: "SET_BUTTON"
+    LOAD_HOME: "LOAD_HOME"
 }
 
 // WITH THIS WE'RE MAKING OUR GLOBAL DATA STORE
@@ -31,8 +31,7 @@ function GlobalStoreContextProvider(props) {
         currentList: null,
         newListCounter: 0,
         listMarkedForDeletion: null,
-        isHome: true,
-        isAllLists: false
+        isHome: true
     });
     
     // SINCE WE'VE WRAPPED THE STORE IN THE AUTH CONTEXT WE CAN ACCESS THE USER HERE
@@ -47,8 +46,7 @@ function GlobalStoreContextProvider(props) {
                     currentList: payload,
                     newListCounter: store.newListCounter + 1,
                     listMarkedForDeletion: null,
-                    isHome: store.isHome,
-                    isAllLists: store.isAllLists
+                    isHome: store.isHome
                 });
             }
             case GlobalStoreActionType.LOAD_LISTS: {
@@ -56,7 +54,8 @@ function GlobalStoreContextProvider(props) {
                     lists: payload,
                     currentList: null,
                     newListCounter: store.newListCounter,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    isHome: store.isHome
                 });
             }
             case GlobalStoreActionType.MARK_LIST_FOR_DELETION: {
@@ -65,8 +64,7 @@ function GlobalStoreContextProvider(props) {
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: payload,
-                    isHome: store.isHome,
-                    isAllLists: store.isAllLists
+                    isHome: store.isHome
                 });
             }
             case GlobalStoreActionType.UNMARK_LIST_FOR_DELETION: {
@@ -75,8 +73,7 @@ function GlobalStoreContextProvider(props) {
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
-                    isHome: store.isHome,
-                    isAllLists: store.isAllLists
+                    isHome: store.isHome
                 });
             }
             case GlobalStoreActionType.SET_CURRENT_LIST: {
@@ -85,19 +82,26 @@ function GlobalStoreContextProvider(props) {
                     currentList: payload,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
-                    isHome: store.isHome,
-                    isAllLists: store.isAllLists
+                    isHome: store.isHome
                 });
             }
-            case GlobalStoreActionType.SET_BUTTON: {
+            case GlobalStoreActionType.LOAD_HOME: {
                 return setStore({
-                    lists: store.lists,
+                    lists: payload,
+                    currentList: null,
+                    newListCounter: store.newListCounter,
+                    listMarkedForDeletion: null,
+                    isHome: true
+                });
+            }
+            case GlobalStoreActionType.LOAD_ALL_LISTS: {
+                return setStore({
+                    lists: payload,
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
-                    isHome: payload.isHome,
-                    isAllLists: payload.isAllLists
-                })
+                    isHome: false
+                });
             }
             default:
                 return store;
@@ -106,7 +110,6 @@ function GlobalStoreContextProvider(props) {
 
     store.createNewList = async function () {
         let newListName = "Untitled" + store.newListCounter;
-        console.log(auth.user);
         let payload = {
             name: newListName,
             items: ["?", "?", "?", "?", "?"],
@@ -135,37 +138,37 @@ function GlobalStoreContextProvider(props) {
         }
     }
 
-    store.loadLists = async function () {
-        try {
-            const response = await api.getLists();
-            if (response.data.success) {
-                let listsArray = response.data.lists;
-                storeReducer({
-                    type: GlobalStoreActionType.LOAD_LISTS,
-                    payload: listsArray
-                });
-            }
-            else {
-                console.log("API FAILED TO GET THE LISTS");
-            }
-        }
-        catch (err) {
-            console.log(err.response.data.errorMessage);
-        }
-    }
+    // store.loadLists = async function () {
+    //     try {
+    //         const response = await api.getLists();
+    //         if (response.data.success) {
+    //             let listsArray = response.data.lists;
+    //             storeReducer({
+    //                 type: GlobalStoreActionType.LOAD_LISTS,
+    //                 payload: listsArray
+    //             });
+    //         }
+    //         else {
+    //             console.log("API FAILED TO GET THE LISTS");
+    //         }
+    //     }
+    //     catch (err) {
+    //         console.log(err.response.data.errorMessage);
+    //     }
+    // }
 
-    store.loadAllLists = async function () {
-        try {
-            const response = await api.getAllTop5Lists();
-            let listsArray = response.data.lists;
-            storeReducer({
-                type: GlobalStoreActionType.LOAD_LISTS,
-                payload: listsArray
-            });
-        } catch (err) {
-            console.log(err.response.data.errorMessage);
-        }
-    }
+    // store.loadAllLists = async function () {
+    //     try {
+    //         const response = await api.getAllTop5Lists();
+    //         let listsArray = response.data.lists;
+    //         storeReducer({
+    //             type: GlobalStoreActionType.LOAD_LISTS,
+    //             payload: listsArray
+    //         });
+    //     } catch (err) {
+    //         console.log(err.response.data.errorMessage);
+    //     }
+    // }
 
     store.markListForDeletion = async function (id) {
         // GET THE LIST
@@ -234,20 +237,15 @@ function GlobalStoreContextProvider(props) {
     store.updateList = async function (list) {
         try {
             const updateListResponse = await api.updateTop5ListById(list._id, list);
-            let loadListsResponse;
             if (store.isHome) {
-                loadListsResponse = await api.getLists();
+                store.loadHome();
             } 
             else {
-                loadListsResponse = await api.getAllTop5Lists();
+                store.loadAllLists();
             }
-            let listsArray = loadListsResponse.data.lists;
-            storeReducer({
-                type: GlobalStoreActionType.LOAD_LISTS,
-                payload: listsArray
-            });
+            console.log("success in updating");
         } catch (err) {
-            console.log(err.response.data.errorMessage);
+            console.log("Error updating list.");
         }
     }
 
@@ -280,14 +278,31 @@ function GlobalStoreContextProvider(props) {
         store.updateList(list);
     }
 
-    store.setButton = function (isHome, isAllLists) {
-        storeReducer({
-            type: GlobalStoreActionType.SET_BUTTON,
-            payload: {
-                isHome: isHome,
-                isAllLists: isAllLists
-            }
-        });
+    store.loadHome = async function () {
+        try {
+            const response = await api.getLists();
+            let listsArray = response.data.lists;
+            storeReducer({
+                type: GlobalStoreActionType.LOAD_HOME,
+                payload: listsArray
+            });
+            console.log("success in loading home")
+        } catch (err) {
+            console.log("Error loading home.");
+        }
+    }
+
+    store.loadAllLists = async function () {
+        try {
+            const response = await api.getAllTop5Lists();
+            let listsArray = response.data.lists;
+            storeReducer({
+                type: GlobalStoreActionType.LOAD_ALL_LISTS,
+                payload: listsArray
+            });
+        } catch (err) {
+            console.log(err.response.data.errorMessage);
+        }
     }
 
     return (

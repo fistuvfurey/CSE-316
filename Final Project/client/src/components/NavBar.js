@@ -12,31 +12,22 @@ import SearchIcon from '@mui/icons-material/Search';
 export default function NavBar() {
 
   const { store } = useContext(GlobalStoreContext);
+  const handleClickHomeButton = () => {
+    store.loadHome();
+  }
 
-  const handleHomeButton = () => {
-    store.setButton(true, false);
-    store.loadLists();
-  }
-  
-  const handleAllListsButton = () => {
-    store.setButton(false, true);
+  const handleClickAllListsButton = () => {
     store.loadAllLists();
-  }
-  
-  const handleUsersListsButtion = () => {
-  }
-  
-  const handleCommunityListsButton = () => {
   }
 
   return (
     <Box >
       <AppBar position="static" sx={{ boxShadow: 0 }}>
         <Toolbar>
-        <IconButton color="inherit" aria-label="your lists" component="span" onClick={handleHomeButton}>
+        <IconButton color="inherit" aria-label="your lists" component="span" onClick={handleClickHomeButton}>
             <HomeIcon fontSize="large"/>
         </IconButton>
-        <IconButton color="inherit" aria-label="all lists" component="span" onClick={handleAllListsButton}>
+        <IconButton color="inherit" aria-label="all lists" component="span" onClick={handleClickAllListsButton}>
           <PeopleIcon fontSize="large"/>
         </IconButton>
         <IconButton color="inherit" aria-label="user lists" component="span">
