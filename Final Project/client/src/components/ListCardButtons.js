@@ -31,16 +31,20 @@ function ListCardButtons(props) {
         
     return (
         <div>
-        <IconButton onClick={handleClickLikeButton()}>
+        <IconButton onClick={(event) => {
+            handleClickLikeButton();
+        }}>
             <ThumbUpOffAltIcon style={{ fontSize: '24pt' }}></ThumbUpOffAltIcon>
             <Typography>{list.likes.length}</Typography>
         </IconButton>
-        <IconButton onClick={handleClickDislikeButton()}>
+        <IconButton onClick={(event) => {
+            handleClickDislikeButton();
+        }}>
             <ThumbDownOffAlt style={{ fontSize: '24pt' }}></ThumbDownOffAlt>
             <Typography>{list.dislikes.length}</Typography>
         </IconButton>
         <IconButton onClick={(event) => {
-            handleDeleteList(event, list._id)
+            handleDeleteList(event, list._id);
         }} aria-label='delete'>
             <DeleteIcon style={{ fontSize: '24pt' }}></DeleteIcon>
         </IconButton>  
