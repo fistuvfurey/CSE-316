@@ -21,11 +21,15 @@ function ListCardButtons(props) {
     }
 
     async function handleClickLikeButton() {
-        store.likeButton(list);
+        if (store.isPublished) {
+            store.likeButton(list);
+        }
     }
 
     async function handleClickDislikeButton() {
-        store.dislikeButton(list);
+        if (list.isPublished) {
+            store.dislikeButton(list);
+        }
     }
 
     let isDeleteIcon = true;

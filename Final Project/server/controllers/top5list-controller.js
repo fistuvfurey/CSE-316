@@ -58,6 +58,7 @@ updateTop5List = async (req, res) => {
         top5List.numViews = body.numViews
         top5List.isPublished = body.isPublished
         top5List.comments = body.comments
+        top5List.datePublished = body.datePublished
         top5List
             .save()
             .then(() => {
@@ -126,6 +127,7 @@ getTop5Lists = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
+/* Gets a user's lists for when the home button is selected. */
 getLists = async (req, res) => {
     let decodedToken = jwt.decode(req.cookies.token);
     let email = decodedToken.user.email;

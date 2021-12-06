@@ -109,7 +109,8 @@ function GlobalStoreContextProvider(props) {
             dislikes: [],
             numViews: 0,
             isPublished: false,
-            comments: []
+            comments: [],
+            datePublished: ""
         };
         try {
             const createListResponse = await api.createTop5List(payload);
@@ -201,7 +202,7 @@ function GlobalStoreContextProvider(props) {
             else {
                 store.loadAllLists();
             }
-            console.log("success in updating");
+            console.log("Successfully updated " + list.name);
         } catch (err) {
             console.log("Error updating list.");
         }

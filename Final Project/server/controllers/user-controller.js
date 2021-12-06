@@ -29,7 +29,7 @@ login = async (req, res) => {
         }
 
         const user = await User.findOne({ username: username });
-        console.log("USERNAME:", user);
+
         if (!user) {
             return res
                 .status(400)

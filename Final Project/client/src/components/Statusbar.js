@@ -25,6 +25,15 @@ function Statusbar() {
     /* Handles closing the full-screen dialog and publishing list when user clicks "publish". */
     const handlePublish = () => {
         store.currentList.isPublished = true;
+        // Get the published data
+        const date = new Date();
+        const year = date.getFullYear();
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", 
+        "Sep", "Oct", "Nov", "Dec"];
+        const month = months[date.getMonth()];
+        const day = date.getDate();
+        store.currentList.datePublished = month + " " + day + ", " + year;
+        console.log(store.currentList.datePublished);
         store.updateList(store.currentList);
     };
 

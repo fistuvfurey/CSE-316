@@ -46,6 +46,7 @@ function ListCard(props) {
                         <Grid direction="column">
                             <Typography>{list.name}</Typography>
                             <Typography>By {list.ownerUsername}</Typography>
+                            <Typography>Published: {list.datePublished}</Typography>
                             <Button onClick={(event) => {
                                 event.stopPropagation();
                                 if (!list.isPublished) {
