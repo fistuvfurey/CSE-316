@@ -12,12 +12,22 @@ import SearchIcon from '@mui/icons-material/Search';
 export default function NavBar() {
 
   const { store } = useContext(GlobalStoreContext);
+  
   const handleClickHomeButton = () => {
     store.loadHome();
   }
 
   const handleClickAllListsButton = () => {
-    store.loadAllLists();
+    store.loadAllLists().then(() => {
+      store.sortByNewest();
+    });
+  }
+
+  function handleKeyPress(event) {
+    if (event.code === "Enter") {
+      const searchPhrase = event.target.value;
+      store.search(searchPhrase);
+    }
   }
 
   return (
@@ -37,6 +47,7 @@ export default function NavBar() {
           <FunctionsIcon fontSize="large"/>
         </IconButton>
           <TextField sx={{ flex: 1, backgroundColor: "#FFFFFF", borderRadius: 2 }} size="small"
+            onKeyPress={handleKeyPress}
             InputProps={{
               startAdornment: (
                   <InputAdornment position='start'>

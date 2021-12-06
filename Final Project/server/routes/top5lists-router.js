@@ -15,6 +15,5 @@ router.post('/register', UserController.registerUser)
 router.get('/loggedIn', UserController.getLoggedIn)
 router.post('/login', UserController.login)
 router.get('/logout', UserController.logout)
-router.get('/user/:email', UserController.getUserByEmail)
 
 module.exports = router

@@ -12,7 +12,8 @@ const Top5ListSchema = new Schema(
         numViews: { type: Number, required: true }, 
         isPublished: { type: Boolean, required: true },
         comments: { type: [{ username : String, comment : String }], required: false },
-        datePublished: { type: String, required: false }
+        datePublished: { type: String, required: false },
+        time: { type: Number, required: false }
     },
     { timestamps: true },
 )

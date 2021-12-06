@@ -12,6 +12,7 @@ import { ListCardButtons, ListItemsCard, CommentCard } from '.';
     @author Aidan Furey
 */
 function ListCard(props) {
+    
     const { store } = useContext(GlobalStoreContext);
     const { list } = props;
     const { auth } = useContext(AuthContext);

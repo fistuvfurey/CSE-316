@@ -59,6 +59,7 @@ updateTop5List = async (req, res) => {
         top5List.isPublished = body.isPublished
         top5List.comments = body.comments
         top5List.datePublished = body.datePublished
+        top5List.time = body.time
         top5List
             .save()
             .then(() => {

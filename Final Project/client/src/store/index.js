@@ -13,13 +13,13 @@ import AuthContext from '../auth'
 export const GlobalStoreContext = createContext({});
 
 export const GlobalStoreActionType = {
-    CHANGE_LIST_NAME: "CHANGE_LIST_NAME",
     CREATE_NEW_LIST: "CREATE_NEW_LIST",
     MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
     UNMARK_LIST_FOR_DELETION: "UNMARK_LIST_FOR_DELETION",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     LOAD_ALL_LISTS: "LOAD_ALL_LISTS",
-    LOAD_HOME: "LOAD_HOME"
+    LOAD_HOME: "LOAD_HOME",
+    UPDATE_LISTS: "UPDATE_LISTS"
 }
 
 // WITH THIS WE'RE MAKING OUR GLOBAL DATA STORE
@@ -93,6 +93,15 @@ function GlobalStoreContextProvider(props) {
                     isHome: false
                 });
             }
+            case GlobalStoreActionType.UPDATE_LISTS: {
+                return setStore({
+                    lists: payload,
+                    currentList: store.currentList, 
+                    newListCounter: store.newListCounter, 
+                    listMarkedForDeletion: null,
+                    isHome: store.isHome
+                });
+            }
             default:
                 return store;
         }
@@ -108,9 +117,7 @@ function GlobalStoreContextProvider(props) {
             likes: [],
             dislikes: [],
             numViews: 0,
-            isPublished: false,
-            comments: [],
-            datePublished: ""
+            isPublished: false
         };
         try {
             const createListResponse = await api.createTop5List(payload);
@@ -130,7 +137,6 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.markListForDeletion = async function (id) {
-        // GET THE LIST
         try {
             let response = await api.getTop5ListById(id);
             if (response.data.success) {
@@ -175,18 +181,6 @@ function GlobalStoreContextProvider(props) {
                     payload: top5List
                 });
             }
-        } catch (err) {
-            console.log(err.response.data.errorMessage);
-        }
-    }
-
-    store.getListById = async function (id) {
-        try {
-            let response = await api.getTop5ListById(id);
-            let top5List = response.data.top5List;
-            console.log(top5List);
-            return top5List;
-            
         } catch (err) {
             console.log(err.response.data.errorMessage);
         }
@@ -263,6 +257,25 @@ function GlobalStoreContextProvider(props) {
         } catch (err) {
             console.log(err.response.data.errorMessage);
         }
+    }
+
+    /* Updates lists in the store. */
+    store.updateLists = function (lists) {
+        storeReducer({
+            type: GlobalStoreActionType.UPDATE_LISTS,
+            payload: lists
+        });
+    }
+
+    store.search = function () {
+
+    }
+
+    store.sortByNewest = function () {
+        let sorted = store.lists.sort(function (a, b) {
+            return b.time - a.time;
+        });
+        store.updateLists(sorted);
     }
 
     return (

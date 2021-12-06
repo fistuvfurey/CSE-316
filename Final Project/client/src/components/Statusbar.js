@@ -32,17 +32,20 @@ function Statusbar() {
         "Sep", "Oct", "Nov", "Dec"];
         const month = months[date.getMonth()];
         const day = date.getDate();
-        store.currentList.datePublished = month + " " + day + ", " + year;
+        store.currentList.datePublished = month + " " + day + ", " + year;  // update date string
+        store.currentList.time = Date.now();  // get the time now
         console.log(store.currentList.datePublished);
         store.updateList(store.currentList);
     };
 
+    /* Change an item in the list. */
     function handleUpdateText(event) {
         let text = event.target.value;
         let id = event.target.id.substring("list-".length) - 1;
         store.currentList.items[id] = text;
     }
 
+    /* Change the name of the list. */
     function handleUpdateListName(event) {
         let text = event.target.value;
         store.currentList.name = text;
