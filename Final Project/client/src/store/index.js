@@ -30,7 +30,7 @@ function GlobalStoreContextProvider(props) {
         currentList: null,
         newListCounter: 0,
         listMarkedForDeletion: null,
-        button: "HOME"
+        button: ""
     });
     
     // SINCE WE'VE WRAPPED THE STORE IN THE AUTH CONTEXT WE CAN ACCESS THE USER HERE
@@ -281,9 +281,9 @@ function GlobalStoreContextProvider(props) {
                 store.updateLists(filteredLists);
             }
         }
-        if (store.button === "ALL_LISTS") {
+        else if (store.button === "ALL_LISTS") {
             let filteredLists = store.lists.filter(list =>
-                list.name.toLowerCase().startsWith(searchQuery.toLowerCase()));
+                list.name.toLowerCase() === searchQuery.toLowerCase());
             store.updateLists(filteredLists);
         }
     }

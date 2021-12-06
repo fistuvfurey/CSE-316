@@ -16,10 +16,12 @@ export default function NavBar() {
   const isMenuOpen = Boolean(anchorEl);
   
   const handleClickHomeButton = () => {
+    store.button = "HOME";
     store.loadHome();
   }
 
   const handleClickAllListsButton = () => {
+    store.button = "ALL_LISTS";
     store.loadAllLists();
   };
 
@@ -58,6 +60,7 @@ export default function NavBar() {
 
   function handleKeyPress(event) {
     if (event.code === "Enter") {
+      console.log(store.button)
       const searchPhrase = event.target.value;
       store.search(searchPhrase);
     }
