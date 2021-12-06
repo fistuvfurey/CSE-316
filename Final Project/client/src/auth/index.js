@@ -130,9 +130,8 @@ function AuthContextProvider(props) {
             history.push("/");
             store.loadHome();
         } catch (err) {
-            let errMessage = err.response.data.errorMessage;
-            console.log(errMessage);
-            auth.toggleErrStatus(errMessage);
+            console.log(err.response.data.errorMessage);
+            auth.toggleErrStatus(err.response.data.errorMessage);
         }
     }
 

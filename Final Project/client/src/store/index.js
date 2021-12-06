@@ -141,17 +141,16 @@ function GlobalStoreContextProvider(props) {
                 });
             }
         } catch (err) {
-            console.log(err.response.data.errorMessage);
+            console.log("Error marking list for deletion.");
         }
     }
 
     store.deleteList = async function (listToDelete) {
         try {
             let response = await api.deleteTop5ListById(listToDelete._id);
-            store.loadLists();
+            store.loadHome();
         } catch (err) {
-            let errMessage = err.response.data.errorMessage;
-            console.log(errMessage);
+            console.log("Error deleting ", listToDelete);
         }
     }
 
