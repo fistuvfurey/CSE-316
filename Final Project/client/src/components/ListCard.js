@@ -48,12 +48,6 @@ function ListCard(props) {
                             <Typography>{list.name}</Typography>
                             <Typography>By {list.ownerUsername}</Typography>
                             <Typography>Published: {list.datePublished}</Typography>
-                            <Button onClick={(event) => {
-                                event.stopPropagation();
-                                if (!list.isPublished) {
-                                    handleEditClick();
-                                }
-                            }}>Edit</Button>
                         </Grid>
                     </CardContent>
                     <Box sx={{ flexGrow: 1 }}></Box>

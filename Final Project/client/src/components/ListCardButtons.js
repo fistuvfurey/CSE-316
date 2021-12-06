@@ -32,11 +32,6 @@ function ListCardButtons(props) {
         }
     }
 
-    let isDeleteIconVisible = "visible";
-    if (store.button !== "HOME") {
-        isDeleteIconVisible = "hidden";
-    }
-
     let buttons = 
              <div>
                 <IconButton onClick={(event) => {
@@ -53,7 +48,9 @@ function ListCardButtons(props) {
                 <ThumbDownOffAlt style={{ fontSize: '24pt' }}></ThumbDownOffAlt>
                 <Typography>{list.dislikes.length}</Typography>
                 </IconButton>
-                    <IconButton visibility={isDeleteIconVisible} onClick={(event) => {
+                    <IconButton 
+                    className={store.button == "HOME" ? "visible" : "invisible"} 
+                    onClick={(event) => {
                             handleDeleteList(event, list._id);
                         }} aria-label='delete'>
                         <DeleteIcon style={{ fontSize: '24pt' }}></DeleteIcon>

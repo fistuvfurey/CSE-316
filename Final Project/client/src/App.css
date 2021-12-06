@@ -331,6 +331,14 @@ input {
   font-size: 24pt;
 }
 
+.visible {
+  visibility: visible;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
 #close-modal-button {
   float: right;
 }
