@@ -196,18 +196,12 @@ function GlobalStoreContextProvider(props) {
         }
     }
 
-    store.updateList = async function (list) {
+    store.updateList = async function (listToUpdate) {
         try {
-            const updateListResponse = await api.updateTop5ListById(list._id, list);
-            if (store.button === "HOME") {
-                store.loadHome();
-            } 
-            else {
-                store.loadAllLists();
-            }
-            console.log("Successfully updated " + list.name);
+            const updateListResponse = await api.updateTop5ListById(listToUpdate._id, listToUpdate);
+            store.updateLists(store.lists);
         } catch (err) {
-            console.log("Error updating list.");
+            console.log("Error updating ", listToUpdate.name);
         }
     }
 
