@@ -267,8 +267,17 @@ function GlobalStoreContextProvider(props) {
         });
     }
 
-    store.search = function () {
-
+    store.search = function (searchQuery) {
+        if (store.isHome) {
+            // If the searchQuery is empty, display all of the user's lists.
+            if (searchQuery === "") {
+                store.loadHome();
+            }
+            else {
+                let filteredLists = store.lists.filter(list => list.name.toLowerCase().startsWith(searchQuery.toLowerCase()));
+                store.updateLists(filteredLists);
+            }
+        }
     }
 
     store.sortByNewest = function () {
