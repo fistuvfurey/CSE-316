@@ -19,6 +19,7 @@ export const GlobalStoreActionType = {
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     LOAD_ALL_LISTS: "LOAD_ALL_LISTS",
     LOAD_HOME: "LOAD_HOME",
+    LOAD_ALL_USER_LISTS: "LOAD_ALL_USER_LISTS",
     UPDATE_LISTS: "UPDATE_LISTS"
 }
 
@@ -30,7 +31,7 @@ function GlobalStoreContextProvider(props) {
         currentList: null,
         newListCounter: 0,
         listMarkedForDeletion: null,
-        button: ""
+        button: "HOME"
     });
     
     // SINCE WE'VE WRAPPED THE STORE IN THE AUTH CONTEXT WE CAN ACCESS THE USER HERE
@@ -100,6 +101,15 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter, 
                     listMarkedForDeletion: null,
                     button: store.button
+                });
+            }
+            case GlobalStoreActionType.LOAD_ALL_USER_LISTS: {
+                return setStore({
+                    lists: payload,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    listMarkedForDeletion: null,
+                    button: "ALL_USER_LISTS"
                 });
             }
             default:
@@ -230,7 +240,7 @@ function GlobalStoreContextProvider(props) {
         store.updateList(list);
     }
 
-    /* Loads a user's lists for when the home button is selected. */
+    /* Loads a user's lists for when the "home" button is selected. */
     store.loadHome = async function () {
         try {
             const response = await api.getLists();
@@ -261,12 +271,35 @@ function GlobalStoreContextProvider(props) {
         }
     }
 
+    /* Empties lists and updates view for when "user lists" button is selected. */
+    store.setAllUserLists = function () {   
+        storeReducer({
+            type: GlobalStoreActionType.LOAD_ALL_USER_LISTS,
+            payload: []
+        });
+    }
+
     /* Updates lists in the store. */
     store.updateLists = function (lists) {
         storeReducer({
             type: GlobalStoreActionType.UPDATE_LISTS,
             payload: lists
         });
+    }
+
+    /* Loads all lists from the database for when a user is searching user lists. */
+    store.loadAllUserLists = async function (lists) {
+        try {
+            const response = await api.getAllTop5Lists();
+            let listsArray = response.data.lists;
+            store.lists = listsArray;
+            storeReducer({
+                type: GlobalStoreActionType.LOAD_ALL_USER_LISTS,
+                payload: listsArray
+            });
+        } catch (err) {
+            console.log("Error loading all user lists.")
+        }
     }
 
     store.search = function (searchQuery) {
@@ -285,6 +318,13 @@ function GlobalStoreContextProvider(props) {
             let filteredLists = store.lists.filter(list =>
                 list.name.toLowerCase() === searchQuery.toLowerCase());
             store.updateLists(filteredLists);
+        }
+        else if (store.button === "ALL_USER_LISTS") {
+            store.loadAllUserLists().then(() => {
+                let filteredLists = store.lists.filter(list => 
+                    list.ownerUsername.toLowerCase() === searchQuery.toLowerCase());
+                    store.updateLists(filteredLists);
+            });
         }
     }
 

@@ -18,11 +18,16 @@ export default function NavBar() {
   const handleClickHomeButton = () => {
     store.button = "HOME";
     store.loadHome();
-  }
+  };
 
   const handleClickAllListsButton = () => {
     store.button = "ALL_LISTS";
     store.loadAllLists();
+  };
+
+  const handleClickAllUserListsButton = () => {
+    store.button = "ALL_USER_LISTS";
+    store.setAllUserLists();
   };
 
   const handleSortByMenuOpen = (event) => {
@@ -100,7 +105,7 @@ export default function NavBar() {
         <IconButton color="inherit" aria-label="all lists" component="span" onClick={handleClickAllListsButton}>
           <PeopleIcon fontSize="large"/>
         </IconButton>
-        <IconButton color="inherit" aria-label="user lists" component="span">
+        <IconButton color="inherit" aria-label="user lists" component="span" onClick={handleClickAllUserListsButton}>
           <PersonIcon fontSize="large"/>
         </IconButton>
         <IconButton color="inherit" aria-label="community lists" component="span">
