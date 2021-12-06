@@ -9,10 +9,12 @@ import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import { GlobalStoreContext } from '../store';
 
 export default function AppBanner() {
     
     const { auth } = useContext(AuthContext);
+    const { store } = useContext(GlobalStoreContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
 
@@ -24,8 +26,15 @@ export default function AppBanner() {
         setAnchorEl(null);
     };
 
+    const handleContinueAsGuest = () => {
+        handleMenuClose();
+        auth.continueAsGuest();
+    }
+
     const handleLogout = () => {
         handleMenuClose();
+        store.button = "";  // clear the button so nothing displays in the statusbar
+        store.lists = [];  // clear the lists 
         auth.logoutUser();
     }
 
@@ -48,7 +57,7 @@ export default function AppBanner() {
         >
             <MenuItem onClick={handleMenuClose}><Link to = '/login/'>Log In</Link></MenuItem>
             <MenuItem onClick={handleMenuClose}><Link to='/register/'>Create New Account</Link></MenuItem>
-            <MenuItem onClick={handleMenuClose}><Link to='/continue/'>Continue as Guest</Link></MenuItem>
+            <MenuItem onClick={handleContinueAsGuest}>Continue as Guest</MenuItem>
         </Menu>
     );
     const loggedInMenu = 
@@ -74,18 +83,18 @@ export default function AppBanner() {
     let userInitials = null;
     if (auth.loggedIn) {
         menu = loggedInMenu;
-
-        userInitials = 
-        <Box 
-        sx={{ padding: 2 }}>
-            <Typography
-            variant="h5"
-            noWrap
-            component="div"
-            align="right">
-                { auth.user.firstName.charAt(0).toUpperCase() + auth.user.lastName.charAt(0).toUpperCase() }
-            </Typography>
-        </Box>
+        userInitials = (
+            <Box 
+            sx={{ padding: 2 }}>
+                <Typography
+                    variant="h5"
+                    noWrap
+                    component="div"
+                    align="right">
+                    { auth.user && auth.user.firstName.charAt(0).toUpperCase() + auth.user.lastName.charAt(0).toUpperCase() }
+                </Typography>
+            </Box>
+        );
     }
     
     function getAccountMenu(loggedIn) {

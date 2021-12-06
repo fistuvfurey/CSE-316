@@ -1,6 +1,6 @@
-import { createContext, useContext, useState } from 'react'
-import api from '../api'
-import AuthContext from '../auth'
+import { createContext, useContext, useState } from 'react';
+import api from '../api';
+import AuthContext from '../auth';
 
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -32,7 +32,7 @@ function GlobalStoreContextProvider(props) {
         currentList: null,
         newListCounter: 0,
         listMarkedForDeletion: null,
-        button: "HOME"
+        button: ""
     });
     
     // SINCE WE'VE WRAPPED THE STORE IN THE AUTH CONTEXT WE CAN ACCESS THE USER HERE
@@ -221,39 +221,48 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.likeButton= async function (list) {
-        if (list.likes.includes(auth.user.username)) {
-            // unlike the list
-            list.likes = list.likes.filter(username => username !== auth.user.username);  // remove username from list of likes
-        } 
-        else if (!list.dislikes.includes(auth.user.username)) {  // cannnot like the list if the user already disliked it
-             // like the list
-            list.likes.push(auth.user.username);  // add username to list of likes
+        if (auth.user) {
+            if (list.likes.includes(auth.user.username)) {
+                // unlike the list
+                list.likes = list.likes.filter(username => username !== auth.user.username);  // remove username from list of likes
+            } 
+            else if (!list.dislikes.includes(auth.user.username)) {  // cannnot like the list if the user already disliked it
+                // like the list
+                list.likes.push(auth.user.username);  // add username to list of likes
+            }
+            store.updateList(list);
         }
-       store.updateList(list);
     }
 
     store.dislikeButton = async function (list) {
-        if (list.dislikes.includes(auth.user.username)) {
-            // undislike the list
-            list.dislikes = list.dislikes.filter(username => username !== auth.user.username);  // remove username from list of dislikes
+        if (auth.user) {
+            if (list.dislikes.includes(auth.user.username)) {
+                // undislike the list
+                list.dislikes = list.dislikes.filter(username => username !== auth.user.username);  // remove username from list of dislikes
+            }
+            else if (!list.likes.includes(auth.user.username)) {  // cannot dislike the list if the user already liked it 
+                // dislike the list
+                list.dislikes.push(auth.user.username)
+            }
+            store.updateList(list);
         }
-        else if (!list.likes.includes(auth.user.username)) {  // cannot dislike the list if the user already liked it 
-            // dislike the list
-            list.dislikes.push(auth.user.username)
-        }
-        store.updateList(list);
     }
 
     /* Loads a user's lists for when the "home" button is selected. */
     store.loadHome = async function () {
         try {
-            const response = await api.getLists();
-            let listsArray = response.data.lists;
-            storeReducer({
-                type: GlobalStoreActionType.LOAD_HOME,
-                payload: listsArray
-            });
-            console.log("success in loading home")
+            if (!auth.isGuest) {
+                const response = await api.getLists();
+                let listsArray = response.data.lists;
+                storeReducer({
+                    type: GlobalStoreActionType.LOAD_HOME,
+                    payload: listsArray
+                });
+                console.log("Success in loading home.")
+            }
+            else {
+                console.log("Logged in as guest.")
+            }
         } catch (err) {
             console.log("Error loading home.");
         }
@@ -272,6 +281,22 @@ function GlobalStoreContextProvider(props) {
             store.sortByNewest();
         } catch (err) {
             console.log("Error loading all lists.");
+        }
+    }
+
+    /* Loads all lists for when a guest selects the "all lists" button is selected. */
+    store.loadGuestAllLists = async function () {
+        try {
+            const response = await api.getAllListsForGuest();
+            let listsArray = response.data.lists;
+            store.lists = listsArray;
+            storeReducer({
+                type: GlobalStoreActionType.LOAD_ALL_LISTS,
+                payload: listsArray
+            });
+            store.sortByNewest();
+        } catch (err) {
+            console.log("Error while loading all lists for guest.");
         }
     }
 
@@ -331,11 +356,20 @@ function GlobalStoreContextProvider(props) {
             store.updateLists(filteredLists);
         }
         else if (store.button === "ALL_USER_LISTS") {
-            store.loadAllUserLists().then(() => {
-                let filteredLists = store.lists.filter(list => 
-                    list.ownerUsername.toLowerCase() === searchQuery.toLowerCase());
-                    store.updateLists(filteredLists);
-            });
+            if (auth.isGuest) {
+                store.loadGuestAllLists().then(() => {
+                    let filteredLists = store.lists.filter(list =>
+                        list.ownerUsername.toLowerCase() === searchQuery.toLowerCase());
+                        store.updateLists(filteredLists);
+                });
+            }
+            else {
+                store.loadAllUserLists().then(() => {
+                    let filteredLists = store.lists.filter(list => 
+                        list.ownerUsername.toLowerCase() === searchQuery.toLowerCase());
+                        store.updateLists(filteredLists);
+                });
+            }
         }
     }
 

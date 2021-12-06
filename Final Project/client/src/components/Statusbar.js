@@ -9,6 +9,7 @@ import AddIcon from '@mui/icons-material/Add';
     @author Aidan Furey
 */
 function Statusbar() {
+    
     const { store } = useContext(GlobalStoreContext);
     const [canPublish, setCanPublish] = useState(true);
 

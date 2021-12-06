@@ -143,7 +143,6 @@ getLists = async (req, res) => {
                 .json({ success: false, error: 'Top 5 Lists not found' })
         }
         else {
-            // PUT ALL THE LISTS INTO ID, NAME PAIRS
             let lists = [];
             for (let key in top5Lists) {
                 let list = top5Lists[key];

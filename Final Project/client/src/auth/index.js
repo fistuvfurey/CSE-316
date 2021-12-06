@@ -12,7 +12,8 @@ export const AuthActionType = {
     LOGIN_USER: "LOGIN_USER",
     TOGGLE_IS_FAILURE: "TOGGLE_IS_FAILURE",
     LOGOUT_USER: "LOGOUT_USER",
-    SET_LOGGED_IN: "SET_LOGGED_IN"
+    SET_LOGGED_IN: "SET_LOGGED_IN",
+    CONTINUE_AS_GUEST: "CONTINUE_AS_GUEST"
 }
 
 function AuthContextProvider(props) {
@@ -20,7 +21,8 @@ function AuthContextProvider(props) {
         user: null,
         loggedIn: false,
         isFailure: false, 
-        errMessage: null
+        errMessage: null,
+        isGuest: false
     });
     
     const history = useHistory();
@@ -37,7 +39,8 @@ function AuthContextProvider(props) {
                     user: payload.user,
                     loggedIn: payload.loggedIn,
                     isFailure: false,
-                    errMessage: null
+                    errMessage: null,
+                    isGuest: auth.isGuest
                 });
             }
             case AuthActionType.REGISTER_USER: {
@@ -45,7 +48,8 @@ function AuthContextProvider(props) {
                     user: payload.user,
                     loggedIn: true,
                     isFailure: false,
-                    errMessage: null
+                    errMessage: null,
+                    isGuest: false
                 });
             }
             case AuthActionType.LOGIN_USER: {
@@ -53,7 +57,8 @@ function AuthContextProvider(props) {
                     user: payload.user,
                     loggedIn: true,
                     isFailure: false,
-                    errMessage: null
+                    errMessage: null,
+                    isGuest: false
                 });
             }
             case AuthActionType.TOGGLE_IS_FAILURE: {
@@ -61,7 +66,8 @@ function AuthContextProvider(props) {
                     user: auth.user,
                     loggedIn: auth.loggedIn,
                     isFailure: !auth.isFailure,
-                    errMessage: payload
+                    errMessage: payload,
+                    isGuest: auth.isGuest
                 });
             }
             case AuthActionType.LOGOUT_USER: {
@@ -69,7 +75,8 @@ function AuthContextProvider(props) {
                     user: null,
                     loggedIn: false,
                     isFailure: false,
-                    errMessage: null
+                    errMessage: null,
+                    isGuest: auth.isGuest
                 });
             }
             case AuthActionType.SET_LOGGED_IN: {
@@ -77,7 +84,17 @@ function AuthContextProvider(props) {
                     user: payload.user,
                     loggedIn: payload.loggedIn,
                     isFailure: false,
-                    errMessage: null
+                    errMessage: null,
+                    isGuest: auth.isGuest
+                });
+            }
+            case AuthActionType.CONTINUE_AS_GUEST: {
+                return setAuth({
+                    user: null,
+                    loggedIn: true,
+                    isFailure: false,
+                    errMessage: null,
+                    isGuest: true
                 });
             }
             default:
@@ -153,6 +170,14 @@ function AuthContextProvider(props) {
             type: AuthActionType.TOGGLE_IS_FAILURE,
             payload: errMessage
         });
+    }
+
+    auth.continueAsGuest = function() {
+        authReducer({
+            type: AuthActionType.CONTINUE_AS_GUEST,
+            payload: null
+        });
+        history.push("/");
     }
 
     return (

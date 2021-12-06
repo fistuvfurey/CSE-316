@@ -11,11 +11,8 @@ function authManager() {
                     errorMessage: "Unauthorized"
                 })
             }
-
             const verified = jwt.verify(token, process.env.JWT_SECRET)
-            //req.userId = verified.userId;
             req.user = verified.user;
-
             next();
         } catch (err) {
             console.error(err);

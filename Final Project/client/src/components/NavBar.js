@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
 import { GlobalStoreContext } from '../store';
+import AuthContext from '../auth';
 import { AppBar, Box, Toolbar, IconButton, Typography, TextField, InputAdornment, MenuItem, Menu} from '@mui/material';
 // Icon imports
 import SortIcon from '@mui/icons-material/Sort';
@@ -12,6 +13,8 @@ import SearchIcon from '@mui/icons-material/Search';
 export default function NavBar() {
 
   const { store } = useContext(GlobalStoreContext);
+  const { auth } = useContext(AuthContext);
+  
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
   
@@ -22,7 +25,12 @@ export default function NavBar() {
 
   const handleClickAllListsButton = () => {
     store.button = "ALL_LISTS";
-    store.loadAllLists();
+    if (auth.isGuest) {
+      store.loadGuestAllLists();
+    }
+    else {
+      store.loadAllLists();
+    }
   };
 
   const handleClickAllUserListsButton = () => {
@@ -76,6 +84,19 @@ export default function NavBar() {
     }
   }
 
+  let homeButton = (
+    <IconButton color="inherit" aria-label="your lists" component="span" onClick={handleClickHomeButton}>
+      <HomeIcon fontSize="large"/>
+    </IconButton>
+  );
+  if (auth.isGuest) {
+    homeButton = (
+      <IconButton disabled color="inherit" aria-label="your lists" component="span" onClick={handleClickHomeButton}>
+        <HomeIcon fontSize="large"/>
+      </IconButton>
+    );
+  }
+
   const menu = (
     <Menu
       anchorEl={anchorEl}
@@ -104,9 +125,7 @@ export default function NavBar() {
     <Box >
       <AppBar position="static" sx={{ boxShadow: 0 }}>
         <Toolbar>
-        <IconButton color="inherit" aria-label="your lists" component="span" onClick={handleClickHomeButton}>
-            <HomeIcon fontSize="large"/>
-        </IconButton>
+        {homeButton}
         <IconButton color="inherit" aria-label="all lists" component="span" onClick={handleClickAllListsButton}>
           <PeopleIcon fontSize="large"/>
         </IconButton>
