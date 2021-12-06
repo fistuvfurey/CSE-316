@@ -97,7 +97,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.UPDATE_LISTS: {
                 return setStore({
                     lists: payload,
-                    currentList: store.currentList, 
+                    currentList: null, 
                     newListCounter: store.newListCounter, 
                     listMarkedForDeletion: null,
                     button: store.button

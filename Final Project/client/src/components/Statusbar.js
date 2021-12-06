@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { GlobalStoreContext } from '../store'
 import { Typography, Button, Dialog, Fab, AppBar, Toolbar, TextField, Card, Stack, Grid } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
@@ -8,7 +8,6 @@ import AddIcon from '@mui/icons-material/Add';
     
     @author Aidan Furey
 */
-
 function Statusbar() {
     const { store } = useContext(GlobalStoreContext);
     
@@ -19,7 +18,9 @@ function Statusbar() {
 
     /* Handles closing the full-screen dialog when user clicks "save". */
     const handleClose = () => {
-        store.updateList(store.currentList);
+        store.updateList(store.currentList).then(() => {
+            store.loadHome();
+        });
     };
     
     /* Handles closing the full-screen dialog and publishing list when user clicks "publish". */
@@ -33,9 +34,10 @@ function Statusbar() {
         const month = months[date.getMonth()];
         const day = date.getDate();
         store.currentList.datePublished = month + " " + day + ", " + year;  // update date string
-        store.currentList.time = Date.now();  // get the time now
-        console.log(store.currentList.datePublished);
-        store.updateList(store.currentList);
+        store.currentList.time = Date.now();
+        store.updateList(store.currentList).then(() => {
+            store.loadHome();
+        });
     };
 
     /* Change an item in the list. */
