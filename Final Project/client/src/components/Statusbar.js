@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react'
+import { useContext, useState } from 'react'
 import { GlobalStoreContext } from '../store'
 import { Typography, Button, Dialog, Fab, AppBar, Toolbar, TextField, Card, Stack, Grid } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
@@ -10,11 +10,12 @@ import AddIcon from '@mui/icons-material/Add';
 */
 function Statusbar() {
     const { store } = useContext(GlobalStoreContext);
-    
+    const [canPublish, setCanPublish] = useState(true);
+
     /* Handles opening the full-screen dialog. */
     const handleClickOpen = () => {
         store.createNewList();
-    };
+    }
 
     /* Handles closing the full-screen dialog when user clicks "save". */
     const handleClose = () => {
@@ -50,6 +51,16 @@ function Statusbar() {
     /* Change the name of the list. */
     function handleUpdateListName(event) {
         let text = event.target.value;
+        // Get lists with the same name as the curent text value for list name
+        let listsWithSameName = store.lists.filter(list =>
+            list.name.toLowerCase() === text.toLowerCase() && 
+                list.isPublished);
+        if (text === "" || listsWithSameName.length !== 0) {
+            setCanPublish(false);
+        }
+        else {
+            setCanPublish(true);
+        }
         store.currentList.name = text;
     }
 
@@ -72,7 +83,7 @@ function Statusbar() {
             <Button autoFocus color="inherit" onClick={handleClose}>
               save
             </Button>
-            <Button autoFocus color="inherit" onClick={handlePublish}>
+            <Button autoFocus color="inherit" onClick={handlePublish} disabled={!canPublish}>
               publish
             </Button>
           </Toolbar>

@@ -32,15 +32,13 @@ function ListCardButtons(props) {
         }
     }
 
-    let isDeleteIcon = true;
-    if (store.isAllLists) {
-        isDeleteIcon = !isDeleteIcon;
+    let isDeleteIconVisible = "visible";
+    if (store.button !== "HOME") {
+        isDeleteIconVisible = "hidden";
     }
 
-    let buttons;
-    if (isDeleteIcon) {
-        buttons = 
-            <div>
+    let buttons = 
+             <div>
                 <IconButton onClick={(event) => {
                     event.stopPropagation();
                     handleClickLikeButton();
@@ -55,32 +53,12 @@ function ListCardButtons(props) {
                 <ThumbDownOffAlt style={{ fontSize: '24pt' }}></ThumbDownOffAlt>
                 <Typography>{list.dislikes.length}</Typography>
                 </IconButton>
-                    <IconButton onClick={(event) => {
+                    <IconButton visibility={isDeleteIconVisible} onClick={(event) => {
                             handleDeleteList(event, list._id);
                         }} aria-label='delete'>
                         <DeleteIcon style={{ fontSize: '24pt' }}></DeleteIcon>
                     </IconButton>
             </div> 
-    }
-    else {
-        buttons = 
-            <div>
-                <IconButton onClick={(event) => {
-                    event.stopPropagation();
-                    handleClickLikeButton();
-                }}>
-                    <ThumbUpOffAltIcon style={{ fontSize: '24pt' }}></ThumbUpOffAltIcon>
-                    <Typography>{list.likes.length}</Typography>
-                </IconButton>
-                <IconButton onClick={(event) => {
-                    event.stopPropagation();
-                    handleClickDislikeButton();
-                }}>
-                <ThumbDownOffAlt style={{ fontSize: '24pt' }}></ThumbDownOffAlt>
-                <Typography>{list.dislikes.length}</Typography>
-                </IconButton>
-            </div> 
-    }
         
     return (
           buttons
