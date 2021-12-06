@@ -21,7 +21,8 @@ export const GlobalStoreActionType = {
     LOAD_HOME: "LOAD_HOME",
     LOAD_ALL_USER_LISTS: "LOAD_ALL_USER_LISTS",
     UPDATE_LISTS: "UPDATE_LISTS",
-    LOAD_COMMUNITY_LISTS: "LOAD_COMMUNITY_LISTS"
+    LOAD_COMMUNITY_LISTS: "LOAD_COMMUNITY_LISTS",
+    SEARCH: "SEARCH"
 }
 
 // WITH THIS WE'RE MAKING OUR GLOBAL DATA STORE
@@ -32,7 +33,8 @@ function GlobalStoreContextProvider(props) {
         currentList: null,
         newListCounter: 0,
         listMarkedForDeletion: null,
-        button: ""
+        button: "",
+        searchBarQuery: ""
     });
     
     // SINCE WE'VE WRAPPED THE STORE IN THE AUTH CONTEXT WE CAN ACCESS THE USER HERE
@@ -47,7 +49,8 @@ function GlobalStoreContextProvider(props) {
                     currentList: payload,
                     newListCounter: store.newListCounter + 1,
                     listMarkedForDeletion: null,
-                    button: store.button
+                    button: store.button,
+                    searchBarQuery: store.searchBarQuery
                 });
             }
             case GlobalStoreActionType.MARK_LIST_FOR_DELETION: {
@@ -56,7 +59,8 @@ function GlobalStoreContextProvider(props) {
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: payload,
-                    button: store.button
+                    button: store.button,
+                    searchBarQuery: store.searchBarQuery
                 });
             }
             case GlobalStoreActionType.UNMARK_LIST_FOR_DELETION: {
@@ -65,7 +69,8 @@ function GlobalStoreContextProvider(props) {
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
-                    button: store.button
+                    button: store.button,
+                    searchBarQuery: store.searchBarQuery
                 });
             }
             case GlobalStoreActionType.SET_CURRENT_LIST: {
@@ -74,7 +79,8 @@ function GlobalStoreContextProvider(props) {
                     currentList: payload,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
-                    button: store.button
+                    button: store.button,
+                    searchBarQuery: store.searchBarQuery
                 });
             }
             case GlobalStoreActionType.LOAD_HOME: {
@@ -83,7 +89,8 @@ function GlobalStoreContextProvider(props) {
                     currentList: null,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
-                    button: "HOME"
+                    button: "HOME",
+                    searchBarQuery: store.searchBarQuery
                 });
             }
             case GlobalStoreActionType.LOAD_ALL_LISTS: {
@@ -92,7 +99,8 @@ function GlobalStoreContextProvider(props) {
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
-                    button: "ALL_LISTS"
+                    button: "ALL_LISTS",
+                    searchBarQuery: store.searchBarQuery
                 });
             }
             case GlobalStoreActionType.UPDATE_LISTS: {
@@ -101,7 +109,8 @@ function GlobalStoreContextProvider(props) {
                     currentList: null, 
                     newListCounter: store.newListCounter, 
                     listMarkedForDeletion: null,
-                    button: store.button
+                    button: store.button,
+                    searchBarQuery: store.searchBarQuery
                 });
             }
             case GlobalStoreActionType.LOAD_ALL_USER_LISTS: {
@@ -110,7 +119,8 @@ function GlobalStoreContextProvider(props) {
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
-                    button: "ALL_USER_LISTS"
+                    button: "ALL_USER_LISTS",
+                    searchBarQuery: store.searchBarQuery
                 });
             }
             case GlobalStoreActionType.LOAD_COMMUNITY_LISTS: {
@@ -119,7 +129,18 @@ function GlobalStoreContextProvider(props) {
                     currentList: null,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
-                    button: "COMMUNITY"
+                    button: "COMMUNITY",
+                    searchBarQuery: store.searchBarQuery
+                });
+            }
+            case GlobalStoreActionType.SEARCH: {
+                return setStore({
+                    lists: store.lists,
+                    currentList: null,
+                    newListCounter: store.newListCounter,
+                    listMarkedForDeletion: null,
+                    button: store.button,
+                    searchBarQuery: payload
                 });
             }
             default:
@@ -339,6 +360,10 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.search = function (searchQuery) {
+        storeReducer({
+            type: GlobalStoreActionType.SEARCH,
+            payload: searchQuery
+        });
         if (store.button === "HOME") {
             // If the searchQuery is empty, display all of the user's lists.
             if (searchQuery === "") {

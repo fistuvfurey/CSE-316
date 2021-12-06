@@ -78,8 +78,8 @@ export default function NavBar() {
 
   function handleKeyPress(event) {
     if (event.code === "Enter") {
-      console.log(store.button)
       const searchPhrase = event.target.value;
+      store.searchBarQuery = searchPhrase;
       store.search(searchPhrase);
     }
   }

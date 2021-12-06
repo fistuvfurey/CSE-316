@@ -134,6 +134,17 @@ function Statusbar() {
             </div>
         )
     }
+    else if (store.button === "ALL_LISTS" ||  store.button === "ALL_USER_LISTS") {
+        statusbar = (
+            <div id="top5-statusbar">
+                <Typography 
+                    variant="h3" 
+                    sx={{ paddingLeft: "15px "}}
+                >
+                    {store.searchBarQuery !== "" ? store.searchBarQuery + " Lists" : ""}</Typography>
+            </div>
+        )
+    }
     return (
         statusbar
     );
