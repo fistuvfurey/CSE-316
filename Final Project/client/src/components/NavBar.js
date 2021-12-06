@@ -20,9 +20,7 @@ export default function NavBar() {
   }
 
   const handleClickAllListsButton = () => {
-    store.loadAllLists().then(() => {
-      store.sortByNewest();
-    });
+    store.loadAllLists();
   };
 
   const handleSortByMenuOpen = (event) => {

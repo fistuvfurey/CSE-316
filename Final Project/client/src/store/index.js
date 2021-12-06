@@ -30,7 +30,7 @@ function GlobalStoreContextProvider(props) {
         currentList: null,
         newListCounter: 0,
         listMarkedForDeletion: null,
-        isHome: true
+        button: "HOME"
     });
     
     // SINCE WE'VE WRAPPED THE STORE IN THE AUTH CONTEXT WE CAN ACCESS THE USER HERE
@@ -45,7 +45,7 @@ function GlobalStoreContextProvider(props) {
                     currentList: payload,
                     newListCounter: store.newListCounter + 1,
                     listMarkedForDeletion: null,
-                    isHome: store.isHome
+                    button: store.button
                 });
             }
             case GlobalStoreActionType.MARK_LIST_FOR_DELETION: {
@@ -54,7 +54,7 @@ function GlobalStoreContextProvider(props) {
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: payload,
-                    isHome: store.isHome
+                    button: store.button
                 });
             }
             case GlobalStoreActionType.UNMARK_LIST_FOR_DELETION: {
@@ -63,7 +63,7 @@ function GlobalStoreContextProvider(props) {
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
-                    isHome: store.isHome
+                    button: store.button
                 });
             }
             case GlobalStoreActionType.SET_CURRENT_LIST: {
@@ -72,7 +72,7 @@ function GlobalStoreContextProvider(props) {
                     currentList: payload,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
-                    isHome: store.isHome
+                    button: store.button
                 });
             }
             case GlobalStoreActionType.LOAD_HOME: {
@@ -81,7 +81,7 @@ function GlobalStoreContextProvider(props) {
                     currentList: null,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
-                    isHome: true
+                    button: "HOME"
                 });
             }
             case GlobalStoreActionType.LOAD_ALL_LISTS: {
@@ -90,7 +90,7 @@ function GlobalStoreContextProvider(props) {
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
-                    isHome: false
+                    button: "ALL_LISTS"
                 });
             }
             case GlobalStoreActionType.UPDATE_LISTS: {
@@ -99,7 +99,7 @@ function GlobalStoreContextProvider(props) {
                     currentList: store.currentList, 
                     newListCounter: store.newListCounter, 
                     listMarkedForDeletion: null,
-                    isHome: store.isHome
+                    button: store.button
                 });
             }
             default:
@@ -189,7 +189,7 @@ function GlobalStoreContextProvider(props) {
     store.updateList = async function (list) {
         try {
             const updateListResponse = await api.updateTop5ListById(list._id, list);
-            if (store.isHome) {
+            if (store.button === "HOME") {
                 store.loadHome();
             } 
             else {
@@ -250,12 +250,14 @@ function GlobalStoreContextProvider(props) {
         try {
             const response = await api.getAllTop5Lists();
             let listsArray = response.data.lists;
+            store.lists = listsArray;
             storeReducer({
                 type: GlobalStoreActionType.LOAD_ALL_LISTS,
                 payload: listsArray
             });
+            store.sortByNewest();
         } catch (err) {
-            console.log(err.response.data.errorMessage);
+            console.log("Error loading all lists.");
         }
     }
 
@@ -268,15 +270,21 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.search = function (searchQuery) {
-        if (store.isHome) {
+        if (store.button === "HOME") {
             // If the searchQuery is empty, display all of the user's lists.
             if (searchQuery === "") {
                 store.loadHome();
             }
             else {
-                let filteredLists = store.lists.filter(list => list.name.toLowerCase().startsWith(searchQuery.toLowerCase()));
+                let filteredLists = store.lists.filter(list => 
+                    list.name.toLowerCase().startsWith(searchQuery.toLowerCase()));
                 store.updateLists(filteredLists);
             }
+        }
+        if (store.button === "ALL_LISTS") {
+            let filteredLists = store.lists.filter(list =>
+                list.name.toLowerCase().startsWith(searchQuery.toLowerCase()));
+            store.updateLists(filteredLists);
         }
     }
 
