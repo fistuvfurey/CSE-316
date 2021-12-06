@@ -12,6 +12,7 @@ router.get('/top5lists', auth.verify, Top5ListController.getTop5Lists)
 router.get('/lists', auth.verify, Top5ListController.getLists)
 router.get(`/guesttop5lists/`, Top5ListController.getTop5Lists)
 router.post(`/communitylist/`, Top5ListController.createCommunityList)
+router.get('/communitylists', Top5ListController.getCommunityLists)
 
 router.post('/register', UserController.registerUser)
 router.get('/loggedIn', UserController.getLoggedIn)

@@ -135,13 +135,13 @@ function GlobalStoreContextProvider(props) {
             }
             case GlobalStoreActionType.LOAD_COMMUNITY_LISTS: {
                 return setStore({
-                    lists: payload,
+                    lists: store.lists,
                     currentList: null,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
                     button: "COMMUNITY",
                     searchBarQuery: store.searchBarQuery,
-                    communityLists: store.communityLists
+                    communityLists: payload
                 });
             }
             case GlobalStoreActionType.SEARCH: {
@@ -379,9 +379,11 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.loadCommunityLists = async function () {
+        const response = await api.getCommunityLists();
+        let communityListsArray = response.data.lists;
         storeReducer({
             type: GlobalStoreActionType.LOAD_COMMUNITY_LISTS,
-            payload: null
+            payload: communityListsArray
         });
     }
 
@@ -395,7 +397,6 @@ function GlobalStoreContextProvider(props) {
 
     /* Updates lists in the store. */
     store.updateLists = function (lists) {
-        store.lists = lists;
         storeReducer({
             type: GlobalStoreActionType.UPDATE_LISTS,
             payload: lists

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { GlobalStoreContext } from '../store'
 import ListCard from './ListCard.js'
+import CommunityListCard from './CommunityListCard';
 import List from '@mui/material/List';
 import DeleteModal from './DeleteModal';
 import NavBar from './NavBar';
@@ -18,7 +19,7 @@ const HomeScreen = () => {
     }, []);
 
     let listCard = "";
-    if (store) {
+    if (store && store.button !== "COMMUNITY") {
         listCard = 
             <List sx={{ width: '90%', left: '5%' }}>
             {
@@ -33,6 +34,20 @@ const HomeScreen = () => {
             { store.listMarkedForDeletion ? 
                 <DeleteModal />
                 : null
+            }
+            </List>;
+    }
+    else if (store && store.button === "COMMUNITY") {
+        listCard = 
+            <List sx={{ width: '90%', left: '5%' }}>
+            {
+                store.lists && store.communityLists.map((list) => (
+                    <CommunityListCard
+                        key={list._id}
+                        list={list}
+                        selected={false}
+                    />
+                ))
             }
             </List>;
     }

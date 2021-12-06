@@ -166,7 +166,6 @@ getLists = async (req, res) => {
             return res.status(400).json({ success: false, error: err })
         }
         if (!top5Lists) {
-            console.log("!top5Lists.length");
             return res
                 .status(404)
                 .json({ success: false, error: 'Top 5 Lists not found' })
@@ -182,6 +181,27 @@ getLists = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
+getCommunityLists = async (req, res) => {
+    await CommunityList.find( {}, (err, communityLists) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+        if (!communityLists) {
+            return res
+                .status(404)
+                .json({ success: false, error: 'Community Lists not found'})
+        }
+        else {
+            let lists = [];
+            for (let key in communityLists) {
+                let list = communityLists[key];
+                lists.push(list);
+            }
+            return res.status(200).json({ sucess: true, lists: lists })
+        }
+    }).catch(err => console.log(err))
+}
+
 module.exports = {
     createTop5List,
     updateTop5List,
@@ -189,5 +209,6 @@ module.exports = {
     getTop5Lists,
     getLists,
     getTop5ListById,
-    createCommunityList
+    createCommunityList,
+    getCommunityLists
 }
