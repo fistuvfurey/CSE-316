@@ -20,7 +20,8 @@ export const GlobalStoreActionType = {
     LOAD_ALL_LISTS: "LOAD_ALL_LISTS",
     LOAD_HOME: "LOAD_HOME",
     LOAD_ALL_USER_LISTS: "LOAD_ALL_USER_LISTS",
-    UPDATE_LISTS: "UPDATE_LISTS"
+    UPDATE_LISTS: "UPDATE_LISTS",
+    LOAD_COMMUNITY_LISTS: "LOAD_COMMUNITY_LISTS"
 }
 
 // WITH THIS WE'RE MAKING OUR GLOBAL DATA STORE
@@ -110,6 +111,15 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
                     button: "ALL_USER_LISTS"
+                });
+            }
+            case GlobalStoreActionType.LOAD_COMMUNITY_LISTS: {
+                return setStore({
+                    lists: payload,
+                    currentList: null,
+                    newListCounter: store.newListCounter,
+                    listMarkedForDeletion: null,
+                    button: "COMMUNITY"
                 });
             }
             default:
@@ -263,6 +273,13 @@ function GlobalStoreContextProvider(props) {
         } catch (err) {
             console.log("Error loading all lists.");
         }
+    }
+
+    store.loadCommunityLists = async function () {
+        storeReducer({
+            type: GlobalStoreActionType.LOAD_COMMUNITY_LISTS,
+            payload: null
+        });
     }
 
     /* Empties lists and updates view for when "user lists" button is selected. */

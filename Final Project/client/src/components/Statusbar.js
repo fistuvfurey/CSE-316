@@ -65,64 +65,76 @@ function Statusbar() {
     }
 
     let i = 0  // used for mapping the items
-    return (
+    let statusbar = <div id="top5-statusbar"></div>;
+    if (store.button === "HOME") {
+        statusbar = ( 
         <div id="top5-statusbar">
             <Fab color="primary" aria-label="add" onClick={handleClickOpen}>
                 <AddIcon aria-label='add'/>
             </Fab>
             <Dialog
-        fullScreen
-        open={store.currentList}
-        onClose={handleClose}
-      >
-        <AppBar sx={{ position: 'relative' }}>
-          <Toolbar>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Workspace
-            </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
-              save
-            </Button>
-            <Button autoFocus color="inherit" onClick={handlePublish} disabled={!canPublish}>
-              publish
-            </Button>
-          </Toolbar>
-        </AppBar>
-
-        <TextField 
-            defaultValue={store.currentList && store.currentList.name}
-            InputProps={{ style: { fontSize: 40 }}}
-            label="List Name"
-            margin="dense" 
-            sx={{ paddingLeft: 1, paddingRight: 120, mb: 1 }}
-            onChange={handleUpdateListName}
-        ></TextField>
-        <Grid direction="column"> 
-        {
-            store.currentList && store.currentList.items.map((item) => (
-                i += 1,
-                <Stack direction="row">
-                    <Card sx={{ mb: 1 }}>
-                        <Typography variant="h3" sx={{ padding: 3 }}>{i}.</Typography>
-                    </Card>
-                    <TextField
-                        id={"item-" + i}
-                        defaultValue={item}
-                        InputProps={{ style: { fontSize: 48 } }} 
-                        fullWidth
-                        label="fullWidth" 
-                        label={"item " + i} 
-                        margin="none" 
-                        sx={{ size: 6, padding: 1 }}
-                        onChange={handleUpdateText}>
-                    </TextField>           
-                </Stack>
-            ))
-        }
-        </Grid>
-      </Dialog>
+                fullScreen
+                open={store.currentList}
+                onClose={handleClose}
+            >
+            <AppBar sx={{ position: 'relative' }}>
+            <Toolbar>
+                <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                Workspace
+                </Typography>
+                <Button autoFocus color="inherit" onClick={handleClose}>
+                save
+                </Button>
+                <Button autoFocus color="inherit" onClick={handlePublish} disabled={!canPublish}>
+                publish
+                </Button>
+            </Toolbar>
+            </AppBar>
+            <TextField 
+                defaultValue={store.currentList && store.currentList.name}
+                InputProps={{ style: { fontSize: 40 }}}
+                label="List Name"
+                margin="dense" 
+                sx={{ paddingLeft: 1, paddingRight: 120, mb: 1 }}
+                onChange={handleUpdateListName}
+            ></TextField>
+                <Grid direction="column"> 
+                {
+                    store.currentList && store.currentList.items.map((item) => (
+                        i += 1,
+                        <Stack direction="row">
+                            <Card sx={{ mb: 1 }}>
+                                <Typography variant="h3" sx={{ padding: 3 }}>{i}.</Typography>
+                            </Card>
+                            <TextField
+                                id={"item-" + i}
+                                defaultValue={item}
+                                InputProps={{ style: { fontSize: 48 } }} 
+                                fullWidth
+                                label="fullWidth" 
+                                label={"item " + i} 
+                                margin="none" 
+                                sx={{ size: 6, padding: 1 }}
+                                onChange={handleUpdateText}>
+                            </TextField>           
+                        </Stack>
+                    ))
+                }
+                </Grid>
+            </Dialog>
             <Typography variant="h3" sx={{ paddingLeft: "15px" }}>Your Lists</Typography>
         </div>
+        )
+    }
+    else if (store.button === "COMMUNITY") {
+        statusbar = (
+            <div id="top5-statusbar">
+                <Typography variant="h3" sx={{ paddingLeft: "15px "}}>Community Lists</Typography>
+            </div>
+        )
+    }
+    return (
+        statusbar
     );
 }
 

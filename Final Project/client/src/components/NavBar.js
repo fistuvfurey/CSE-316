@@ -30,6 +30,11 @@ export default function NavBar() {
     store.setAllUserLists();
   };
 
+  const handleClickCommunityListsButton = () => {
+    store.button = "COMMUNITY"
+    store.loadCommunityLists();
+  }
+
   const handleSortByMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -108,7 +113,7 @@ export default function NavBar() {
         <IconButton color="inherit" aria-label="user lists" component="span" onClick={handleClickAllUserListsButton}>
           <PersonIcon fontSize="large"/>
         </IconButton>
-        <IconButton color="inherit" aria-label="community lists" component="span">
+        <IconButton color="inherit" aria-label="community lists" component="span" onClick={handleClickCommunityListsButton}>
           <FunctionsIcon fontSize="large"/>
         </IconButton>
           <TextField sx={{ flex: 1, backgroundColor: "#FFFFFF", borderRadius: 2 }} size="small"
