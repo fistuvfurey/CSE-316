@@ -1,4 +1,5 @@
 const Top5List = require('../models/top5list-model');
+const CommunityList = require('../models/communitylist-model');
 const jwt = require("jsonwebtoken");
 
 createTop5List = (req, res) => {
@@ -9,13 +10,11 @@ createTop5List = (req, res) => {
             error: 'You must provide a Top 5 List',
         })
     }
-
     const top5List = new Top5List(body);
     console.log("creating top5List: " + JSON.stringify(top5List));
     if (!top5List) {
         return res.status(400).json({ success: false, error: err })
     }
-
     top5List
         .save()
         .then(() => {
@@ -29,6 +28,36 @@ createTop5List = (req, res) => {
             return res.status(400).json({
                 error,
                 message: 'Top 5 List Not Created!'
+            })
+        })
+}
+
+createCommunityList = (req, res) => {
+    const body = req.body;
+    if (!body) {
+        return res.status(400).json({
+            success: false, 
+            error: 'You must provide a Community List',
+        })
+    }
+    const communityList = new CommunityList(body);
+    console.log("creating Community List: " + JSON.stringify(communityList));
+    if (!communityList) {
+        return res.status(400).json({ success: false, error: err })
+    }
+    communityList
+        .save()
+        .then(() => {
+            return res.status(201).json({
+                success: true,
+                communityList: communityList,
+                message: 'Community List Created!'
+            })
+        })
+        .catch(error => {
+            return res.status(400).json({
+                error,
+                message: 'Community List Not Created!'
             })
         })
 }
@@ -159,5 +188,6 @@ module.exports = {
     deleteTop5List,
     getTop5Lists,
     getLists,
-    getTop5ListById
+    getTop5ListById,
+    createCommunityList
 }

@@ -40,7 +40,12 @@ function Statusbar() {
         store.updateList(store.currentList).then(() => {
             store.loadHome();
         });
+        createCommunityList();
     };
+
+    function createCommunityList() {
+        store.createCommunityList(store.currentList.name, store.currentList.items);
+    }
 
     /* Change an item in the list. */
     function handleUpdateText(event) {
@@ -56,6 +61,7 @@ function Statusbar() {
         let listsWithSameName = store.lists.filter(list =>
             list.name.toLowerCase() === text.toLowerCase() && 
                 list.isPublished);
+        // If there is currently no list name or there are other lists with the same name
         if (text === "" || listsWithSameName.length !== 0) {
             setCanPublish(false);
         }

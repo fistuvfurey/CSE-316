@@ -22,7 +22,8 @@ export const GlobalStoreActionType = {
     LOAD_ALL_USER_LISTS: "LOAD_ALL_USER_LISTS",
     UPDATE_LISTS: "UPDATE_LISTS",
     LOAD_COMMUNITY_LISTS: "LOAD_COMMUNITY_LISTS",
-    SEARCH: "SEARCH"
+    SEARCH: "SEARCH",
+    CREATE_COMMUNITY_LIST: "CREATE_COMMUNITY_LIST"
 }
 
 // WITH THIS WE'RE MAKING OUR GLOBAL DATA STORE
@@ -34,7 +35,8 @@ function GlobalStoreContextProvider(props) {
         newListCounter: 0,
         listMarkedForDeletion: null,
         button: "",
-        searchBarQuery: ""
+        searchBarQuery: "",
+        communityLists: []
     });
     
     // SINCE WE'VE WRAPPED THE STORE IN THE AUTH CONTEXT WE CAN ACCESS THE USER HERE
@@ -50,7 +52,8 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter + 1,
                     listMarkedForDeletion: null,
                     button: store.button,
-                    searchBarQuery: store.searchBarQuery
+                    searchBarQuery: store.searchBarQuery,
+                    communityLists: store.communityLists
                 });
             }
             case GlobalStoreActionType.MARK_LIST_FOR_DELETION: {
@@ -60,7 +63,8 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: payload,
                     button: store.button,
-                    searchBarQuery: store.searchBarQuery
+                    searchBarQuery: store.searchBarQuery,
+                    communityLists: store.communityLists
                 });
             }
             case GlobalStoreActionType.UNMARK_LIST_FOR_DELETION: {
@@ -70,7 +74,8 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
                     button: store.button,
-                    searchBarQuery: store.searchBarQuery
+                    searchBarQuery: store.searchBarQuery,
+                    communityLists: store.communityLists
                 });
             }
             case GlobalStoreActionType.SET_CURRENT_LIST: {
@@ -80,7 +85,8 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
                     button: store.button,
-                    searchBarQuery: store.searchBarQuery
+                    searchBarQuery: store.searchBarQuery,
+                    communityLists: store.communityLists
                 });
             }
             case GlobalStoreActionType.LOAD_HOME: {
@@ -90,7 +96,8 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
                     button: "HOME",
-                    searchBarQuery: store.searchBarQuery
+                    searchBarQuery: store.searchBarQuery,
+                    communityLists: store.communityLists
                 });
             }
             case GlobalStoreActionType.LOAD_ALL_LISTS: {
@@ -100,7 +107,8 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
                     button: "ALL_LISTS",
-                    searchBarQuery: store.searchBarQuery
+                    searchBarQuery: store.searchBarQuery,
+                    communityLists: store.communityLists
                 });
             }
             case GlobalStoreActionType.UPDATE_LISTS: {
@@ -110,7 +118,8 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter, 
                     listMarkedForDeletion: null,
                     button: store.button,
-                    searchBarQuery: store.searchBarQuery
+                    searchBarQuery: store.searchBarQuery,
+                    communityLists: store.communityLists
                 });
             }
             case GlobalStoreActionType.LOAD_ALL_USER_LISTS: {
@@ -120,7 +129,8 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
                     button: "ALL_USER_LISTS",
-                    searchBarQuery: store.searchBarQuery
+                    searchBarQuery: store.searchBarQuery,
+                    communityLists: store.communityLists
                 });
             }
             case GlobalStoreActionType.LOAD_COMMUNITY_LISTS: {
@@ -130,7 +140,8 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
                     button: "COMMUNITY",
-                    searchBarQuery: store.searchBarQuery
+                    searchBarQuery: store.searchBarQuery,
+                    communityLists: store.communityLists
                 });
             }
             case GlobalStoreActionType.SEARCH: {
@@ -140,7 +151,19 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
                     button: store.button,
-                    searchBarQuery: payload
+                    searchBarQuery: payload,
+                    communityLists: store.communityLists
+                });
+            }
+            case GlobalStoreActionType.CREATE_COMMUNITY_LIST: {
+                return setStore({
+                    lists: store.lists,
+                    currentList: null,
+                    newListCounter: store.newListCounter,
+                    listMarkedForDeletion: null,
+                    button: store.button,
+                    searchBarQuery: store.searchBarQuery,
+                    communityLists: payload
                 });
             }
             default:
@@ -174,6 +197,40 @@ function GlobalStoreContextProvider(props) {
             }
         } catch (err) {
             console.log(err.response.data.errorMessage);
+        }
+    }
+
+    store.createCommunityList = async function (name, items) {
+        try {
+            let response = await api.getAllTop5Lists();
+            let allPublishedLists = response.data.lists;
+            let listsWithSameName = allPublishedLists.filter(list =>
+                list.name.toLowerCase() === name.toLowerCase());
+            // If there are no lists with the same name then create the community list
+            if (listsWithSameName.length === 0) {
+                let payload = {
+                    name: name,
+                    items: [
+                        { item : items[0], points: 5 },
+                        { item : items[1], points: 4 },
+                        { item : items[2], points: 3 },
+                        { item : items[3], points: 2 },
+                        { item: items[4], points: 1 }
+                    ],
+                    likes: [],
+                    dislikes: [],
+                    numViews: 0
+                };
+                const createListResponse = await api.createCommunityList(payload);
+                let newCommunityList = createListResponse.data.communityList;
+                store.communityLists.push(newCommunityList);
+                storeReducer({
+                    type: GlobalStoreActionType.CREATE_COMMUNITY_LIST,
+                    payload: store.communityLists
+                });
+            }
+        } catch (err) {
+            console.log("Error creating community list.");
         }
     }
 
@@ -338,6 +395,7 @@ function GlobalStoreContextProvider(props) {
 
     /* Updates lists in the store. */
     store.updateLists = function (lists) {
+        store.lists = lists;
         storeReducer({
             type: GlobalStoreActionType.UPDATE_LISTS,
             payload: lists
