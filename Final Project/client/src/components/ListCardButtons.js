@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { GlobalStoreContext } from '../store';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import { IconButton, Typography } from '@mui/material';
@@ -6,7 +6,7 @@ import ThumbDownOffAlt from '@mui/icons-material/ThumbDownOffAlt';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 /*
-    This is a card in our list of top 5 lists.
+    This is a card of buttons within our ListCard.
     
     @author Aidan Furey
 */
@@ -21,7 +21,7 @@ function ListCardButtons(props) {
     }
 
     async function handleClickLikeButton() {
-        if (store.isPublished) {
+        if (list.isPublished) {
             store.likeButton(list);
         }
     }

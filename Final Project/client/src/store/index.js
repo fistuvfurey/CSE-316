@@ -272,10 +272,38 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.sortByNewest = function () {
-        let sorted = store.lists.sort(function (a, b) {
-            return b.time - a.time;
+        let sortedLists = store.lists.sort(function (listA, listB) {
+            return listB.time - listA.time;
         });
-        store.updateLists(sorted);
+        store.updateLists(sortedLists);
+    }
+
+    store.sortByOldest = function () {
+        let sortedLists = store.lists.sort(function (listA, listB) {
+            return listA.time - listB.time;
+        });
+        store.updateLists(sortedLists);
+    }
+
+    store.sortByViews = function () {
+        let sortedLists = store.lists.sort(function (listA, listB) {
+            return listB.numViews - listA.numViews;
+        });
+        store.updateLists(sortedLists);
+    }
+
+    store.sortByLikes = function () {
+        let sortedLists = store.lists.sort(function (listA, listB) {
+            return listB.likes.length - listA.likes.length;
+        });
+        store.updateLists(sortedLists);
+    }
+
+    store.sortByDislikes = function () {
+        let sortedLists = store.lists.sort(function (listA, listB) {
+            return listB.dislikes.length - listA.dislikes.length;
+        });
+        store.updateLists(sortedLists);
     }
 
     return (
