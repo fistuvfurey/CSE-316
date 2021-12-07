@@ -15,17 +15,14 @@ function CommunityListButtons(props) {
     const { store } = useContext(GlobalStoreContext);
     const { list } = props;
 
-    async function handleDeleteList(event, id) {
-        event.stopPropagation();
-        store.markListForDeletion(id);
-    }
-
     async function handleClickLikeButton() {
-        store.communityListLikeButton(list);
+        store.likeButton(list);
+        store.updateCommunityList(list);
     }
 
     async function handleClickDislikeButton() {
-        store.communityListDislikeButton(list);
+        store.dislikeButton(list);
+        store.updateCommunityList(list);
     }
 
     let buttons = 

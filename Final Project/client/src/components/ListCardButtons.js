@@ -23,12 +23,14 @@ function ListCardButtons(props) {
     async function handleClickLikeButton() {
         if (list.isPublished) {
             store.likeButton(list);
+            store.updateList(list);
         }
     }
 
     async function handleClickDislikeButton() {
         if (list.isPublished) {
             store.dislikeButton(list);
+            store.updateList(list);
         }
     }
 

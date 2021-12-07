@@ -6,6 +6,7 @@ import { Box } from '@mui/system';
 import { Grid, Button, Typography, Accordion, CardContent, Card, AccordionSummary, AccordionDetails, Stack, TextField } from '@mui/material';
 import { ListCardButtons, CommentCard } from '.';
 import CommunityListItemsCard from './CommunityListItemsCard';
+import CommunityListButtons from './CommunityListButtons';
 
 /*
     This is a card in our list of top 5 lists.
@@ -46,7 +47,7 @@ function CommunityListCard(props) {
                     </CardContent>
                     <Box sx={{ flexGrow: 1 }}></Box>
                     <Stack>
-                        <ListCardButtons list={list}></ListCardButtons>
+                        <CommunityListButtons list={list}></CommunityListButtons>
                         <Typography sx={{ paddingLeft: 14 }}>Views: {list.numViews}</Typography>
                     </Stack>
                 </AccordionSummary>

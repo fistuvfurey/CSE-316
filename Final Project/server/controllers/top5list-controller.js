@@ -128,7 +128,7 @@ updateCommunityList = async (req, res) => {
         }
         communityList.name = body.name
         communityList.items = body.items
-        communityList.likes = body.items
+        communityList.likes = body.likes
         communityList.dislikes = body.dislikes
         communityList.numViews = body.numViews
         communityList.comments = body.comments

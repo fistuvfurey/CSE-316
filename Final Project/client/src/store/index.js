@@ -320,7 +320,7 @@ function GlobalStoreContextProvider(props) {
         store.updateCommunityList(list);
     }
 
-    store.likeButton= async function (list) {
+    store.likeButton = async function (list) {
         if (auth.user) {
             if (list.likes.includes(auth.user.username)) {
                 // unlike the list
@@ -330,7 +330,6 @@ function GlobalStoreContextProvider(props) {
                 // like the list
                 list.likes.push(auth.user.username);  // add username to list of likes
             }
-            store.updateList(list);
         }
     }
 
@@ -344,7 +343,6 @@ function GlobalStoreContextProvider(props) {
                 // dislike the list
                 list.dislikes.push(auth.user.username)
             }
-            store.updateList(list);
         }
     }
 
