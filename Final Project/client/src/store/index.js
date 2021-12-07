@@ -23,7 +23,8 @@ export const GlobalStoreActionType = {
     UPDATE_LISTS: "UPDATE_LISTS",
     LOAD_COMMUNITY_LISTS: "LOAD_COMMUNITY_LISTS",
     SEARCH: "SEARCH",
-    CREATE_COMMUNITY_LIST: "CREATE_COMMUNITY_LIST"
+    CREATE_COMMUNITY_LIST: "CREATE_COMMUNITY_LIST",
+    UPDATE_COMMUNITY_LISTS: "UPDATE_COMMUNITY_LISTS"
 }
 
 // WITH THIS WE'RE MAKING OUR GLOBAL DATA STORE
@@ -166,6 +167,17 @@ function GlobalStoreContextProvider(props) {
                     communityLists: payload
                 });
             }
+            case GlobalStoreActionType.UPDATE_COMMUNITY_LISTS: {
+                return setStore({
+                    lists: store.lists,
+                    currentList: null,
+                    newListCounter: store.newListCounter,
+                    listMarkedForDeletion: null,
+                    button: store.button,
+                    searchBarQuery: store.searchBarQuery,
+                    communityLists: payload
+                })
+            }
             default:
                 return store;
         }
@@ -303,6 +315,7 @@ function GlobalStoreContextProvider(props) {
             const month = months[date.getMonth()];
             const day = date.getDate();
             listToUpdate.lastUpdate =  month + " " + day + ", " + year;  // update date string
+            listToUpdate.lastUpdateTime = Date.now();
             const response = await api.updateCommunityListById(listToUpdate._id, listToUpdate);
             store.loadCommunityLists();
         } catch (err) {
@@ -423,6 +436,14 @@ function GlobalStoreContextProvider(props) {
         });
     }
 
+    /* Updates community lists in the store. */
+    store.updateCommunityLists = function (lists) {
+        storeReducer({
+            type: GlobalStoreActionType.UPDATE_COMMUNITY_LISTS,
+            payload: lists
+        });
+    }
+
     /* Loads all lists from the database for when a user is searching user lists. */
     store.loadAllUserLists = async function (lists) {
         try {
@@ -455,9 +476,18 @@ function GlobalStoreContextProvider(props) {
             }
         }
         else if (store.button === "ALL_LISTS") {
-            let filteredLists = store.lists.filter(list =>
-                list.name.toLowerCase() === searchQuery.toLowerCase());
-            store.updateLists(filteredLists);
+            // If the searchQuery is empty and not guest, display all lists.
+            if (searchQuery === "" && !auth.isGuest) {
+                store.loadAllLists();
+            }
+            else if (searchQuery === "" && auth.isGuest) {
+                store.loadAllUserLists();
+            }
+            else {
+                let filteredLists = store.lists.filter(list =>
+                    list.name.toLowerCase() === searchQuery.toLowerCase());
+                store.updateLists(filteredLists);
+                }
         }
         else if (store.button === "ALL_USER_LISTS") {
             if (auth.isGuest) {
@@ -473,6 +503,16 @@ function GlobalStoreContextProvider(props) {
                         list.ownerUsername.toLowerCase() === searchQuery.toLowerCase());
                         store.updateLists(filteredLists);
                 });
+            }
+        }
+        else if (store.button === "COMMUNITY") {
+            if (searchQuery === "") {
+                store.loadCommunityLists();
+            }
+            else {
+                let filteredLists = store.communityLists.filter(list => 
+                        list.name.toLowerCase() === searchQuery.toLowerCase());
+                    store.updateCommunityLists(filteredLists);
             }
         }
     }
