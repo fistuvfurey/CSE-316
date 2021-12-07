@@ -295,8 +295,16 @@ function GlobalStoreContextProvider(props) {
 
     store.updateCommunityList = async function (listToUpdate) {
         try {
+            // Get the published data
+            const date = new Date();
+            const year = date.getFullYear();
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", 
+            "Sep", "Oct", "Nov", "Dec"];
+            const month = months[date.getMonth()];
+            const day = date.getDate();
+            listToUpdate.lastUpdate =  month + " " + day + ", " + year;  // update date string
             const response = await api.updateCommunityListById(listToUpdate._id, listToUpdate);
-            store.updateCommunityLists(store.communityLists);
+            store.loadCommunityLists();
         } catch (err) {
             console.log("Error updating community", listToUpdate.name);
         }

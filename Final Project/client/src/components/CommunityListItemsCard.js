@@ -14,7 +14,10 @@ export default function CommunityListItemsCard(props) {
                 {
                     list.items.map((itemObj) => (
                         i += 1,
-                        <Typography variant="h6" padding={1}>{i}. {itemObj.item}</Typography>
+                        <div>
+                            <Typography variant="h6" padding={1}>{i}. {itemObj.item}</Typography>
+                            <Typography variant="subtitle-1" padding={1}>(Votes: {itemObj.points})</Typography>
+                        </div>
                     ))
                 }
             </Stack>
