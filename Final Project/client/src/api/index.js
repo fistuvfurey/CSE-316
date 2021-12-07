@@ -31,6 +31,7 @@ export const getTop5ListById = (id) => api.get(`/top5list/${id}`)
 export const getAllListsForGuest = (id) => api.get(`/guesttop5lists/`)
 export const createCommunityList = (payload) => api.post(`/communitylist/`, payload)
 export const getCommunityLists = () => api.get(`/communitylists/`)
+export const updateCommunityListById = (id, payload) => api.put(`/communitylist/${id}`, payload)
 
 export const getLoggedIn = () => api.get(`/loggedIn/`);
 export const registerUser = (payload) => api.post(`/register/`, payload)
@@ -45,8 +46,10 @@ const apis = {
     deleteTop5ListById,
     getTop5ListById,
     getAllListsForGuest,
+
     createCommunityList,
     getCommunityLists,
+    updateCommunityListById,
 
     getLoggedIn,
     registerUser,

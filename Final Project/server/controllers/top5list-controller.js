@@ -109,6 +109,51 @@ updateTop5List = async (req, res) => {
     })
 }
 
+updateCommunityList = async (req, res) => {
+    const body = req.body
+    console.log("updateCommunityList: " + JSON.stringify(body));
+    if (!body) {
+        return res.status(400).json({
+            success: false,
+            error: 'You must provide a body to update',
+        })
+    }
+    CommunityList.findOne({ _id: req.params.id }, (err, communityList) => {
+        console.log("community list found: " + JSON.stringify(communityList));
+        if (err) {
+            return res.status(404).json({
+                err,
+                message: 'Community List not found!',
+            })
+        }
+        communityList.name = body.name
+        communityList.items = body.items
+        communityList.likes = body.items
+        communityList.dislikes = body.dislikes
+        communityList.numViews = body.numViews
+        communityList.comments = body.comments
+        communityList.lastUpdateTime = body.lastUpdateTime
+        communityList.lastUpdate = body.lastUpdate
+        communityList
+            .save()
+            .then(() => {
+                console.log("SUCCESS!!!");
+                return res.status(200).json({
+                    success: true,
+                    id: communityList._id,
+                    message: 'Community List updated!'
+                })
+            })
+            .catch(error => {
+                console.log("FAILURE: " + JSON.stringify(error));
+                return res.status(404).json({
+                    error,
+                    message: 'Community List not updated!'
+                })
+            })
+    })
+}
+
 deleteTop5List = async (req, res) => {
     let decodedToken = jwt.decode(req.cookies.token);
     let email = decodedToken.user.email;
@@ -210,5 +255,6 @@ module.exports = {
     getLists,
     getTop5ListById,
     createCommunityList,
-    getCommunityLists
+    getCommunityLists,
+    updateCommunityList
 }

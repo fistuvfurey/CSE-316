@@ -293,9 +293,23 @@ function GlobalStoreContextProvider(props) {
         }
     }
 
+    store.updateCommunityList = async function (listToUpdate) {
+        try {
+            const response = await api.updateCommunityListById(listToUpdate._id, listToUpdate);
+            store.updateCommunityLists(store.communityLists);
+        } catch (err) {
+            console.log("Error updating community", listToUpdate.name);
+        }
+    }
+
     store.incrementListViews = async function (list) {
         list.numViews = list.numViews + 1;
         store.updateList(list);
+    }
+
+    store.incrementCommunityListViews = async function (list) {
+        list.numViews = list.numViews + 1;
+        store.updateCommunityList(list);
     }
 
     store.likeButton= async function (list) {
