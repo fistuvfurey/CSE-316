@@ -520,6 +520,12 @@ function GlobalStoreContextProvider(props) {
 
     store.sortByNewest = function () {
         let sortedLists = store.lists.sort(function (listA, listB) {
+            if (!listA.isPublished) {
+                return 1;
+            }
+            if (!listB.isPublished) {
+                return -1;
+            }
             return listB.time - listA.time;
         });
         store.updateLists(sortedLists);
@@ -527,6 +533,12 @@ function GlobalStoreContextProvider(props) {
 
     store.sortByOldest = function () {
         let sortedLists = store.lists.sort(function (listA, listB) {
+            if (!listA.isPublished) {
+                return 1;
+            }
+            if (!listB.isPublished) {
+                return -1;
+            }
             return listA.time - listB.time;
         });
         store.updateLists(sortedLists);
