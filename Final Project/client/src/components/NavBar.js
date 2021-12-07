@@ -109,9 +109,26 @@ export default function NavBar() {
     }
   }
 
+  let homeButtonColor = "inherit";
+  if (store.button === "HOME") {
+    homeButtonColor = "warning";
+  }
+  let allListsButtonColor = "inherit";
+  if (store.button === "ALL_LISTS") {
+    allListsButtonColor = "warning";
+  }
+  let userListsButtonColor = "inherit";
+  if (store.button === "ALL_USER_LISTS") {
+    userListsButtonColor = "warning";
+  }
+  let communityListsButtonColor = "inherit";
+  if (store.button === "COMMUNITY") {
+    communityListsButtonColor = "warning";
+  }
+
   let homeButton = (
     <IconButton color="inherit" aria-label="your lists" component="span" onClick={handleClickHomeButton}>
-      <HomeIcon fontSize="large"/>
+      <HomeIcon fontSize="large" color={homeButtonColor}/>
     </IconButton>
   );
   if (auth.isGuest) {
@@ -152,13 +169,13 @@ export default function NavBar() {
         <Toolbar>
         {homeButton}
         <IconButton color="inherit" aria-label="all lists" component="span" onClick={handleClickAllListsButton}>
-          <PeopleIcon fontSize="large"/>
+          <PeopleIcon color={allListsButtonColor} fontSize="large"/>
         </IconButton>
         <IconButton color="inherit" aria-label="user lists" component="span" onClick={handleClickAllUserListsButton}>
-          <PersonIcon fontSize="large"/>
+          <PersonIcon color={userListsButtonColor} fontSize="large"/>
         </IconButton>
         <IconButton color="inherit" aria-label="community lists" component="span" onClick={handleClickCommunityListsButton}>
-          <FunctionsIcon fontSize="large"/>
+          <FunctionsIcon color={communityListsButtonColor} fontSize="large"/>
         </IconButton>
           <TextField sx={{ flex: 1, backgroundColor: "#FFFFFF", borderRadius: 2 }} size="small"
             onKeyPress={handleKeyPress}
