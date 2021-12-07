@@ -52,27 +52,52 @@ export default function NavBar() {
   };
 
   const handleSortByNewest = () => {
-    store.sortByNewest();
+    if (store.button === "COMMUNITY") {
+      store.sortCommunityListsByNewest();
+    }
+    else {
+      store.sortByNewest();
+    }
     handleSortByMenuClose();
   }
 
   const handleSortByOldest = () => {
-    store.sortByOldest();
+    if (store.button === "COMMUNITY") {
+      store.sortCommunityListsByOldest();
+    }
+    else {
+      store.sortByOldest();
+    }
     handleSortByMenuClose();
   }
 
   const handleSortByViews = () => {
-    store.sortByViews();
+    if (store.button === "COMMUNITY") {
+      store.sortCommunityListsByViews();
+    }
+    else {
+      store.sortByViews();
+    }
     handleSortByMenuClose();
   }
 
   const handleSortByLikes = () => {
-    store.sortByLikes();
+    if (store.button === "COMMUNITY") {
+      store.sortCommunityListsByLikes();
+    }
+    else {
+      store.sortByLikes();
+    }
     handleSortByMenuClose();
   }
 
   const handleSortByDislikes = () => {
-    store.sortByDislikes();
+    if (store.button === "COMMUNITY") {
+      store.sortCommunityListsByDislikes();
+    }
+    else {
+      store.sortByDislikes();
+    }
     handleSortByMenuClose();
   }
 

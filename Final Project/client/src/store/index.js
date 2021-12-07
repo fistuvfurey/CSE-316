@@ -231,7 +231,8 @@ function GlobalStoreContextProvider(props) {
                     ],
                     likes: [],
                     dislikes: [],
-                    numViews: 0
+                    numViews: 0,
+                    datePublished: Date.now()
                 };
                 const createListResponse = await api.createCommunityList(payload);
                 let newCommunityList = createListResponse.data.communityList;
@@ -317,7 +318,7 @@ function GlobalStoreContextProvider(props) {
             listToUpdate.lastUpdate =  month + " " + day + ", " + year;  // update date string
             listToUpdate.lastUpdateTime = Date.now();
             const response = await api.updateCommunityListById(listToUpdate._id, listToUpdate);
-            store.loadCommunityLists();
+            store.updateCommunityLists(store.communityLists);
         } catch (err) {
             console.log("Error updating community", listToUpdate.name);
         }
@@ -550,6 +551,41 @@ function GlobalStoreContextProvider(props) {
             return listB.dislikes.length - listA.dislikes.length;
         });
         store.updateLists(sortedLists);
+    }
+
+    store.sortCommunityListsByNewest = function () {
+        let sortedLists = store.communityLists.sort(function (listA, listB) {
+            return listB.datePublished - listA.datePublished;
+        });
+        store.updateCommunityLists(sortedLists);
+    }
+
+    store.sortCommunityListsByOldest = function () {
+        let sortedLists = store.communityLists.sort(function (listA, listB) {
+            return listA.datePublished - listB.datePublished;
+        });
+        store.updateCommunityLists(sortedLists);
+    }
+
+    store.sortCommunityListsByViews = function () {
+        let sortedLists = store.communityLists.sort(function (listA, listB) {
+            return listB.numViews - listA.numViews;
+        });
+        store.updateCommunityLists(sortedLists);
+    }
+
+    store.sortCommunityListsByLikes = function () {
+        let sortedLists = store.communityLists.sort(function (listA, listB) {
+            return listB.likes.length - listA.likes.length;
+        });
+        store.updateCommunityLists(sortedLists);
+    }
+
+    store.sortCommunityListsByDislikes = function () {
+        let sortedLists = store.communityLists.sort(function (listA, listB) {
+            return listB.dislikes.length - listA.dislikes.length;
+        });
+        store.updateCommunityLists(sortedLists);
     }
 
     return (

@@ -134,6 +134,7 @@ updateCommunityList = async (req, res) => {
         communityList.comments = body.comments
         communityList.lastUpdateTime = body.lastUpdateTime
         communityList.lastUpdate = body.lastUpdate
+        communityList.datePublished = body.datePublished
         communityList
             .save()
             .then(() => {

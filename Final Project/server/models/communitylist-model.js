@@ -10,7 +10,8 @@ const CommunityListSchema = new Schema(
         numViews: { type: Number, required: true }, 
         comments: { type: [{ username : String, comment : String }], required: false },
         lastUpdateTime: { type: Number, required: false },
-        lastUpdate: { type: String, required: false }
+        lastUpdate: { type: String, required: false },
+        datePublished: { type: Number, required: true }
     },
     { timestamps: true },
 )
