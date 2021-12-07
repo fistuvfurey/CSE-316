@@ -22,6 +22,7 @@ function CommunityListCard(props) {
         if (event.code === "Enter") {
             let comment = { username: auth.user.username, comment: event.target.value }
             list.comments.push(comment);
+            store.updateCommunityList(list);
         }
     }
 
